@@ -95,7 +95,7 @@ export class NewpipelineStack extends cdk.Stack {
     ]
   })
     buildStage.onStateChange(
-      "IntegrationTestFailed",
+      "FAILED",
       new SnsTopic(this.pipelineNotificationsTopic, {
         message: RuleTargetInput.fromText(
           `Integration Test Failed. See details here: ${EventField.fromPath(

@@ -1,0 +1,506 @@
+{
+	"info": {
+		"_postman_id": "5f6610ec-1910-46a8-802d-a15f6f62af64",
+		"name": "2. QR Code Flow - csv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21543286"
+	},
+	"item": [
+		{
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Validating Successful Login\", function () {",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.response.to.have.status(200);",
+							"        pm.expect(jsonData).to.be.an(\"object\");",
+							"        pm.expect(jsonData).to.have.property(\"token\");",
+							"        pm.collectionVariables.set(\"token\", jsonData.token);",
+							"        pm.collectionVariables.set(\"continuetest\", true);  ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const login_name = pm.collectionVariables.get(\"login_name\",\"\");\r",
+							"const login_password = pm.collectionVariables.get(\"login_password\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\"loginName\":\"{{login_name}}\",\"password\":\"{{login_password}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/user/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"user",
+						"login"
+					]
+				},
+				"description": "Login Api"
+			},
+			"response": []
+		},
+		{
+			"name": "Change location",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done as login was not successful');\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    outlet = pm.iterationData.get(\"location_id\");\r",
+							"   pm.collectionVariables.set(\"location_id\",outlet);\r",
+							"   \r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Validating Location Change\", function () {\r",
+							"    if (jsonData.code == 417 )\r",
+							"    {\r",
+							"        pm.collectionVariables.set(\"continuetest\", false);\r",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);\r",
+							"    }else\r",
+							"    {\r",
+							"        pm.response.to.have.status(200);\r",
+							"        pm.expect(jsonData).to.be.an(\"object\");\r",
+							"        pm.expect(jsonData).to.have.property(\"token\");\r",
+							"        pm.collectionVariables.set(\"token_new\", jsonData.token);\r",
+							"        pm.collectionVariables.set(\"continuetest\", true);  \r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"locationId\": \"{{location_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/user/change/location",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"user",
+						"change",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Validating VerifyToken API\", function () ",
+							"{   ",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"VerifyToken API failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.response.to.have.status(200);",
+							"        pm.expect(jsonData).to.be.an(\"array\");",
+							"        //pm.expect(jsonData[0].tokenInfo);",
+							"        const guestEntitlement = JSON.stringify(jsonData[0]);",
+							"        pm.collectionVariables.set(\"continuetest\", true); ",
+							"        pm.collectionVariables.set(\"guestentitlement\", guestEntitlement);  ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done as location updatation was not successful');\r",
+							"}\r",
+							"\r",
+							"var tokenType = pm.collectionVariables.get(\"tokenType\");\r",
+							"const card_num = pm.iterationData.get(\"card_number\");\r",
+							"pm.collectionVariables.set(\"qrcode\",card_num);\r",
+							"const qrcode = card_num.toString();"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tokenType\": {{tokenType}},\r\n    \"tokenCode\": \"{{qrcode}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/admission/verifytoken",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"admission",
+						"verifytoken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SaveBoardingPass",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)",
+							"{",
+							"    throw new Error('Stopping Execution ! No further tests will be done');",
+							"}",
+							"",
+							"var pnrnumber = Math.floor(100000 + Math.random() * 900000);",
+							"console.log(pnrnumber);",
+							"var seatnum = Math.floor(100 + Math.random() * 900);",
+							"console.log(seatnum);",
+							"",
+							"var body = JSON.parse(pm.request.body.raw);",
+							"body.pnr = pnrnumber;",
+							"body.seatNumber = seatnum;",
+							"pm.request.body.raw = JSON.stringify(body);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save Boarding Pass API\", function () ",
+							"{   ",
+							"   var jsonData = pm.response.json();",
+							"",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", true);",
+							"        pm.expect(jsonData).to.be.an(\"object\");",
+							"        pm.collectionVariables.set(\"boardingpassid\", jsonData.id );",
+							"        pm.response.to.have.status(200);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.864.41",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"isManual\": false,\r\n    \"scanResult\": null,\r\n    \"createTime\": \"2021-11-25T03:20:50.274Z\",\r\n    \"name\": \"HARNOOR/DEE\",\r\n    \"pnr\": \"5DICDA\",\r\n    \"fromCity\": \"HKG\",\r\n    \"toCity\": \"ICN\",\r\n    \"airlineCode\": \"KE\",\r\n    \"flightNumber\": \"0608\",\r\n    \"classCode\": \"C\",\r\n    \"dateOfFlight\": \"2021/02/21\",\r\n    \"seatNumber\": \"008J\",\r\n    \"checkInNumber\": \"0001\",\r\n    \"paxStatus\": \"3\",\r\n    \"frequentFlyerNumber\": \"5009265353\",\r\n    \"formatCode\": \"M\",\r\n    \"electronicTicketIndicator\": \"E\",\r\n    \"numberOfLegsEncoded\": \"1\",\r\n    \"fieldSizeOfVariableSizeField\": \"4D\",\r\n    \"beginningOfVersionNumber\": \">\",\r\n    \"versionNumber\": \"5\",\r\n    \"fieldSizeOfFollowingStructuredMessage\": \"18\",\r\n    \"passengerDescription\": \"0\",\r\n    \"sourceOfCheckIn\": \" \",\r\n    \"sourceOfBoardingPassIssuance\": \"O\",\r\n    \"dateOfIssueOfBoardingPass\": \"2021/02/20\",\r\n    \"documentType\": \"B\",\r\n    \"airlineDesignatorOfBoardingPassIssuer\": \"KE\",\r\n    \"baggageTagLicencePlateNumber\": \"\",\r\n    \"nonConsecutiveBaggageTagLicensce1st\": null,\r\n    \"nonConsecutiveBaggageTagLicensce2nd\": null,\r\n    \"fieldSizeOfFollowingStructuredMessageRepeated\": \"2A\",\r\n    \"airlineNumericCode\": \"180\",\r\n    \"documentFormOrSerialNumber\": \"2331620582\",\r\n    \"selecteeIndicator\": \"0\",\r\n    \"internationalDocumentationVerification\": \"\",\r\n    \"marketingCarrierDesignator\": \"KE\",\r\n    \"frequentFlyerAirlineDesignator\": \"AF\",\r\n    \"idOrADIndicator\": \" \",\r\n    \"fastTrack\": null,\r\n    \"freeBaggageAllowAnce\": \"   \"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/boardingPass/save",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"boardingPass",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Create Order API\", function () ",
+							"{   ",
+							"   var jsonData = pm.response.json();",
+							"",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Create Order API failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", true);",
+							"        pm.expect(jsonData).to.be.an(\"object\");",
+							"        pm.collectionVariables.set(\"receiptNumber\", jsonData.receiptNumber);",
+							"        pm.response.to.have.status(200);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done');\r",
+							"}\r",
+							"\r",
+							"// var body = JSON.parse(pm.request.body.raw);\r",
+							"// body.aiResult = JSON.parse(pm.collectionVariables.get(\"guestentitlement\"));\r",
+							"// pm.request.body.raw = JSON.stringify(body);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"aiResult\": {{guestentitlement}},\r\n\t\"boardingPassInfos\": [\r\n\t\t{\r\n\t\t\t\"boardingPassRecordID\": \"{{boardingpassid}}\",\r\n\t\t\t\"airlineCode\": \"AA\",\r\n\t\t\t\"flightNumber\": \"123\",\r\n\t\t\t\"toCity\": \"BOM\",\r\n\t\t\t\"fromCity\": \"DEL\",\r\n\t\t\t\"isPrimary\": true\r\n\t\t}\r\n\t],\r\n\t\"memberInfo\": {\r\n\t\t\"membershipID\": null,\r\n\t\t\"membershipEmail\": null,\r\n\t\t\"membershipPhoneNumber\": null,\r\n\t\t\"salutation\": null,\r\n\t\t\"membershipFirstName\": null,\r\n\t\t\"membershipLastName\": null,\r\n\t\t\"membershipBirthdate\": null,\r\n\t\t\"membershipStatus\": null,\r\n\t\t\"memberAlerts\": [],\r\n\t\t\"responseCode\": null,\r\n\t\t\"correlationId\": null,\r\n\t\t\"serviceResponseCode\": null\r\n\t},\r\n\t\"paymentInfo\": {\r\n\t\t\"totalAmount\": 0,\r\n\t\t\"givenChange\": 0,\r\n\t\t\"serviceCharge\": 0,\r\n\t\t\"totalLinetax\": 0,\r\n\t\t\"totalOrdertax\": 0,\r\n\t\t\"exclusiveDetailTaxAmount\": 0,\r\n\t\t\"taxAmount\": 0,\r\n\t\t\"orderAmount\": 0,\r\n\t\t\"taxName\": null,\r\n\t\t\"taxRate\": null,\r\n\t\t\"taxName2\": null,\r\n\t\t\"taxRate2\": null,\r\n\t\t\"isTaxIncluded2\": null,\r\n\t\t\"isTaxIncluded\": null,\r\n\t\t\"openPid\": null\r\n\t},\r\n\t\"userId\": \"6303216c6c3220837c178db4\",\r\n\t\"Products\": [],\r\n\t\"currencyCode\": \"MYR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/retail/createOrder",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"retail",
+						"createOrder"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2JlOWI0MDg4NjRmOGY5ZTVhMjkwODQiLCJuYW1lIjoiU3llZF9TaG9haWIiLCJsYW5ndWFnZSI6IjEiLCJ1c2VyVGltZVpvbmUiOiJBc2lhL0t1YWxhX0x1bXB1ciIsInVzZXJMYW5ndWFnZSI6IkVuZ2xpc2giLCJ1c2VyVHlwZSI6MSwidXNlclBhcnRuZXJJRCI6IiIsInVzZXJPdXRsZXQiOnsiX2lkIjoiNjJkOGZkNjEzZDc4OWMyNmNkNzQzMjAwIiwibmFtZSI6IlBFTiIsInR5cGUiOjEsImJhc2VDdXJyZW5jeSI6Ik1ZUiIsImFpcnBvcnQiOnsiX2lkIjoiNjI1NGVkMGUxOTU3YjY4MDg5ZjRkZTYyIiwiYWlycG9ydENvdW50cnkiOnsiX2lkIjoiNjJhODEyMDc2MjE5MzA4ZTI4N2EyOTRkIiwibmFtZSI6Ik1hbGF5c2lhIn0sImFpcnBvcnRUaW1lem9uZSI6IkFzaWEvS3VhbGFfTHVtcHVyIn0sImNlcnRpZmljYXRlSUQiOnsiX2lkIjoiNjJkOGZkNjEzZDc4OWMyNmNkNzQzMWZlIiwiZXhwaXJlRGF0ZSI6IjIwMjQtMDctMjFUMDc6MTY6NDkuNDk0WiIsInB1YmxpY0tleSI6Ik1JSUNJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBZzhBTUlJQ0NnS0NBZ0VBOVFFQUhLYlk3cmo4dU9hcXFCbnRaWFB1QStsRGk5RnNXT3lESktZdnNzYnZsQnF4RzdWN3FhczNvZmxsc1VQaE44d1ZENjE5WkhCVGxjdlAyeDB3K3V4djZURGxvYWxGOUJ5bS96NDBOeUlMejNCSkVkdnFMYlFDejJMWGpXMEZVQjlwK1ZOQTM4OUxnMDZ5QWlGc0xCaXdSYnpUZlNFbGFLcWt2b1NIRTBFVzczcDJBYkxHekVLWGh5ZDRQK1IvbnYvQ3Jndi9TMzhnSGN2VkRGOGl0bDdDR0VURVIrcC94a3VnTlhxVWtFZVdZQUw0M0VXeXNNRzQxT0V4UUoyM2duZUdNWlhWQm1jMURDK2VTc2J0V2RBdWI4bzI2RHhWYlFMNmlrS1R3aWlXQSs5Zi9oTXMzaUhUUzZGSlpYamJLakpmNUJ5R3dGK2Fwdkp0TEVDUHdvY1FyVkVoT1p3Z0pLYnhmalN3NkRKbUI2Q1haQkdyb2xCeUtzTUdRdWhZaXJsbWxoczlHOEF3cjVBbEY2aGlyUGtIaWZ1MFlXS0djajRFTURlSGpROTZRaXhpS0dRNllhb1kxSXVBQTlCdWlXODdwQjI1L1JMRzZ0K21ONWJKZDhXWHZWazYzTXJlOUhRWS9sL1g2YzcvRWd5V0R0TWNuODFSd2xSOTZ6ZDJXdExkczdpdlhwWHZFeGxKdk1yR2JqbEcrOWVkSmltTm5Ud0NobUhWQ2dpR0hScWtUSTZwRzZDKzNpNUJpb3YyZGZHVDR0LzgyRHRuSnoyQmpRV2dhcExHZXhpVGkwZUpCUEpqOUVKQ0V2Zm02eC9LU1gxWmtJcW5la20rWmNyL3VITloveHVNNTNjRW40SUN1MmpCNFU3TERTeEhad2xpZmMyejc1VkpFUjhDQXdFQUFRPT0ifSwic2hhcmRLZXkiOiJNWSJ9LCJzaXRlSUQiOjMxMDAsIm9yZ2FuaXNhdGlvbklEIjozMjAwLCJwZXJtaXNzaW9ucyI6W3siRE1SIjpbIlNFQVJDSCIsIlZJRVciXX0seyJPVVRMRVQiOlsiQUREX1NISUZUUyIsIkNMT05FX09VVExFVCIsIk9VVExFVF9QQVJUTkVSX0xJTksiLCJPVVRMRVRfU0VUVElORyIsIlNVQk1JVCIsIkVYUE9SVCIsIlZJRVciLCJERUxFVEUiLCJFRElUIiwiU0FWRSIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIiwiTkVXIiwiSU1QT1JUIl19LHsiVVBMT0FEX1BIT1RPUyI6WyJTQVZFIl19LHsiRklMRV9JTVBPUlRfRVhQT1JUIjpbIkRPV05MT0FEIiwiRVhQT1JUIiwiVklFVyIsIkVESVQiLCJVUERBVEUiLCJJTVBPUlQiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCIsIk5FVyJdfSx7IkFJUkxJTkVTX0NPREVTIjpbIkVYUE9SVCIsIlNBVkUiLCJBRFZBTkNFX1NFQVJDSCIsIlZJRVciLCJTRUFSQ0giLCJFRElUIiwiTkVXIiwiSU1QT1JUIl19LHsiT1JERVIiOlsiU0VBUkNIX1NFVFRMRSIsIk1BUktfQVNfU0VUVExFIiwiRVhQT1JUIiwiRE9XTkxPQUQiLCJQUklOVCIsIlZJRVciLCJFRElUIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giLCJJTVBPUlQiXX0seyJST0xFIjpbIkFEVkFOQ0VfU0VBUkNIIiwiTkVXIiwiREVMRVRFIiwiU0FWRSIsIkVESVQiLCJWSUVXIiwiU0VBUkNIIiwiSU1QT1JUIl19LHsiTU9EVUxFIjpbIkFEVkFOQ0VfU0VBUkNIIiwiTkVXIiwiREVMRVRFIiwiRURJVCIsIlZJRVciLCJTQVZFIiwiU0VBUkNIIiwiSU1QT1JUIl19LHsiQk9BUkRJTkdfUEFTU19UUkFOU0FDVElPTiI6WyJFWFBPUlQiLCJWSUVXIl19LHsiUEFSVE5FUl9DT05UUkFDVCI6WyJFWFBPUlQiLCJWSUVXIiwiU0FWRV9EUkFGVCIsIlNBVkUiLCJDTE9ORSIsIlNVQk1JVCIsIkRFTEVURSIsIkVESVQiLCJVUERBVEUiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCIsIk5FVyIsIklNUE9SVCJdfSx7IkFETUlTU0lPTl9UT0tFTiI6WyJVUERBVEUiLCJDSEFOR0VfU1RBVFVTIiwiREVMRVRFX0VOVElUTEVNRU5UUyIsIkNMT05FX0VOVElUTEVNRU5UUyIsIkVYUE9SVCIsIlNUQVRVU19DSEFOR0UiLCJQQVJUTkVSIiwiVklFVyIsIlNBVkVfRFJBRlQiLCJERUxFVEUiLCJBUFBST1ZFIiwiUkVKRUNUIiwiQ0xPTkVfVE9LRU4iLCJTVUJNSVQiLCJHRU5FUkFURV9BSSIsIlBSSU5UIiwiRURJVCIsIlNBVkUiLCJET1dOTE9BRCIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIiwiTkVXIiwiSU1QT1JUIl19LHsiVkVORE9SIjpbIlNVQk1JVCIsIkVYUE9SVCIsIlZJRVciLCJVUERBVEUiLCJTQVZFIiwiREVMRVRFIiwiRURJVCIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIiwiTkVXIiwiSU1QT1JUIl19LHsiUFJPRFVDVCI6WyJTVUJNSVQiLCJFWFBPUlQiLCJWSUVXIiwiU0FWRSIsIkRFTEVURSIsIkVESVQiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCIsIklNUE9SVCIsIk5FVyJdfSx7IlBBUlRORVIiOlsiRVhQT1JUIiwiU1VCTUlUIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giLCJWSUVXIiwiU0FWRSIsIkRFTEVURSIsIkVESVQiLCJORVciLCJJTVBPUlQiXX0seyJQQVJUTkVSX1JFU1BPTlNFUyI6WyJBRFZBTkNFX1NFQVJDSCIsIkVYUE9SVCIsIkVESVQiLCJWSUVXIl19LHsiVE9LRU4iOlsiRVhQT1JUIiwiVklFVyIsIlRZUEVfQ0hBTkdFIiwiU0FWRSIsIkNSRUFURSIsIlNPUlRfT04iLCJBQ0NFU1NfVE9fRklMVEVSIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giXX0seyJBRE1JU1NJT04iOlsiRVhQT1JUIiwiSU1QT1JUIiwiRE9XTkxPQUQiLCJQUklOVCIsIkVESVQiLCJTQVZFIiwiUkVERUVNIiwiVkVSSUZZIiwiVklFVyIsIk5FVyIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIl19LHsiQ1VSUkVOQ1kiOlsiTkVXIiwiSU1QT1JUIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giLCJTQVZFIiwiRURJVCIsIlZJRVciXX0seyJPVVRCT1VORF9SRVBPUlQiOlsiUlVOX1JFUE9SVCIsIkVYUE9SVCIsIlNFQVJDSCIsIlJFU0VUIiwiVklFVyJdfSx7IkFDVElWSVRZX1JFUE9SVF9CWV9DQVJEIjpbIkVYUE9SVCIsIlJFU0VUIiwiUlVOX1JFUE9SVCIsIlZJRVciXX0seyJEQUlMWV9BQ1RJVklUWV9TVU1NQVJZX1JFUE9SVCI6WyJFWFBPUlQiLCJSVU5fUkVQT1JUIiwiUkVTRVQiLCJWSUVXIl19LHsiQUNUSVZJVFlfUkVQT1JUX0JZX0JPQVJESU5HX1BBU1MiOlsiRVhQT1JUIiwiUlVOX1JFUE9SVCIsIlJFU0VUIiwiVklFVyJdfSx7IlBBUlRORVJfQURNSVNTSU9OX1RPS0VOX1JFUE9SVCI6WyJSVU5fUkVQT1JUIiwiUkVTRVQiLCJFWFBPUlQiLCJWSUVXIl19LHsiT1VUTEVUX0FETUlTU0lPTl9UT0tFTl9SRVBPUlQiOlsiUlVOX1JFUE9SVCIsIlJFU0VUIiwiRVhQT1JUIiwiVklFVyJdfSx7IkRFVklDRVMiOlsiTkVXIiwiQURWQU5DRV9TRUFSQ0giLCJJTVBPUlQiXX0seyJBQ1RJT04iOlsiTkVXIiwiSU1QT1JUIiwiQURWQU5DRV9TRUFSQ0giLCJFRElUIiwiVklFVyIsIlNBVkUiLCJTRUFSQ0giXX0seyJVU0VSUyI6WyJJTVBPUlQiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCJdfSx7IlBJTkNPREUiOlsiU0VBUkNIIiwiVklFVyIsIkFEVkFOQ0VfU0VBUkNIIiwiRURJVCIsIk5FVyIsIklNUE9SVCJdfSx7IkNBUkRfVFJBTlNBQ1RJT05fUkVQT1JUIjpbIlZJRVciXX0seyJQT1NfU0FMRVNfUkVQT1JUIjpbIlZJRVciXX0seyJBVURJVCI6WyJWSUVXX0RFVEFJTFMiLCJWSUVXIiwiRURJVCIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIl19LHsiVEFYIjpbIlZJRVciLCJTQVZFIiwiRURJVCIsIkFEVkFOQ0VfU0VBUkNIIiwiU0VBUkNIIiwiTkVXIiwiSU1QT1JUIl19LHsiQ09VTlRSWSI6WyJWSUVXIiwiRURJVCIsIlNBVkUiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCIsIklNUE9SVCIsIk5FVyJdfSx7IlBPUlRfU1RBVElPTiI6WyJWSUVXIiwiRURJVCIsIlNBVkUiLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCIsIklNUE9SVCIsIk5FVyJdfSx7IlJFUE9SVFMiOlsiRURJVCIsIlZJRVciLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCJdfSx7Ik1FTUJFUlMiOlsiRURJVCIsIlZJRVciLCJBRFZBTkNFX1NFQVJDSCIsIlNFQVJDSCJdfSx7IkRBU0hCT0FSRCI6WyJFRElUIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giLCJWSUVXIl19LHsiUEFZTUVOVCI6WyJSRUZVTkQiLCJDT0xMRUNUIl19LHsiR0xPQkFMX1NFVFRJTkciOlsiU0FWRSIsIk5FVyIsIkVESVQiLCJWSUVXIiwiQURWQU5DRV9TRUFSQ0giLCJTRUFSQ0giXX0seyJSRUNFSVBUX1RFTVBMQVRFIjpbIlNFQVJDSCIsIkVESVQiLCJVUERBVEUiLCJWSUVXIiwiU0FWRSIsIkFEVkFOQ0VfU0VBUkNIIiwiTkVXIiwiSU1QT1JUIl19XSwiaWF0IjoxNjc0NjcwNjEyLCJleHAiOjE2NzQ3MjQ2MTJ9.g7_9D2yLSTOojqT3HBBHySHE-ecoNMDF0koua8BSjbk"
+		},
+		{
+			"key": "clientID",
+			"value": ""
+		},
+		{
+			"key": "tokenType",
+			"value": "2"
+		},
+		{
+			"key": "qrcode",
+			"value": "W9jx83xBzd"
+		},
+		{
+			"key": "corporateTokenID",
+			"value": ""
+		},
+		{
+			"key": "boardingpassid",
+			"value": ""
+		},
+		{
+			"key": "guestentitlement",
+			"value": ""
+		},
+		{
+			"key": "host",
+			"value": "https://dev-us-lms-backendapi.plaza-network.com",
+			"type": "string"
+		},
+		{
+			"key": "login_name",
+			"value": "Syed_Shoaib",
+			"type": "string"
+		},
+		{
+			"key": "login_password",
+			"value": "Trangile@123",
+			"type": "string"
+		},
+		{
+			"key": "continuetest",
+			"value": ""
+		},
+		{
+			"key": "location_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "receiptNumber",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_new",
+			"value": ""
+		}
+	]
+}
