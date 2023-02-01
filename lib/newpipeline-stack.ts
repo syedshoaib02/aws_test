@@ -91,6 +91,7 @@ export class NewpipelineStack extends cdk.Stack {
             "build-specs/cdk-newman-build-spec.yml"
           ),
         }),
+        runOrder: 1,
       }),
     ]
   })
@@ -104,7 +105,7 @@ export class NewpipelineStack extends cdk.Stack {
         ),
       }),
       {
-        ruleName: "IntegrationTestFailed",
+        ruleName: "Failed",
         eventPattern: {
           detail: {
             state: ["FAILED"],
@@ -113,6 +114,12 @@ export class NewpipelineStack extends cdk.Stack {
         description: "Integration test has failed",
       }
     );
+
+
+    
+    
+    
+    
 
 
 
