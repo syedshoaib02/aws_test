@@ -44,17 +44,6 @@ export class NewpipelineStack extends cdk.Stack {
         
 
        }),
-
-      //  new GitHubSourceAction({
-      //   owner: "syedshoaib02",
-      //   repo: "aws_test_backend",
-      //   branch: "master",
-      //   actionName: "Service_Source",
-      //   oauthToken: SecretValue.secretsManager("git_aws"),
-      //   output:this.serviceSourceOutput
-        
-
-      //  }),
       ],
     })
 
@@ -83,20 +72,6 @@ export class NewpipelineStack extends cdk.Stack {
           }),
         }),
 
-        // new CodeBuildAction({
-        //   actionName: "Service_Build",
-        //   input: this.serviceSourceOutput,
-        //   outputs: [this.serviceBuildOutput],
-        //   project: new PipelineProject(this, "ServiceBuildProject", {
-        //     environment: {
-        //       buildImage: LinuxBuildImage.STANDARD_5_0,
-        //     },
-        //     buildSpec: BuildSpec.fromSourceFilename(
-        //       "build-specs/service-build-spec.yml"
-        //     ),
-        //   }),
-        // }),
-
       ],
     });
 
@@ -114,6 +89,7 @@ export class NewpipelineStack extends cdk.Stack {
         }),
       ],
     });
+    ///
 
 
 
