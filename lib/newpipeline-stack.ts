@@ -76,46 +76,24 @@ export class NewpipelineStack extends cdk.Stack {
 
 
    const buildStage= this.pipeline.addStage({
-      stageName: "Build",
-      actions: [
-        // new CodeBuildAction({
+    stageName:"build",
+    actions: [
+      new CodeBuildAction({
 
-        //   actionName: "CDK_Build",
-        //   input: cdkSourceOutput,
-        //   outputs: [this.cdkBuildOutput],
-        //   project: new PipelineProject(this, "CdkBuildProject", {
-        //     environment: {
-          //       buildImage: LinuxBuildImage.STANDARD_5_0,
-          //     },
-        //     buildSpec: BuildSpec.fromSourceFilename(
-        //       "build-specs/cdk-build-spec.yml"
-        //       ),       
-        //     }),
-            
-    
-        //   }),    
-        
-       new CodeBuildAction({
-          actionName: "CDK_Build",
-          input: this.cdkSourceOutput,
-          outputs: [this.cdkBuildOutput],
-          project: new PipelineProject(this, "CdkBuildProject", {
-              environment: {
-              buildImage: LinuxBuildImage.STANDARD_5_0,
-              },
-              buildSpec: BuildSpec.fromSourceFilename(
-              "build-specs/cdk-newman-build-spec.yml"
-              ),       
-          }),
-        
-          
-      })
-      
-      
-      ]
-     
-    });
-
+        actionName: "CDK_Build",
+        input: this.cdkSourceOutput,
+        outputs: [this.cdkBuildOutput],
+        project: new PipelineProject(this, "CdkBuildProject", {
+          environment: {
+            buildImage: LinuxBuildImage.STANDARD_5_0,
+          },
+          buildSpec: BuildSpec.fromSourceFilename(
+            "build-specs/cdk-newman-build-spec.yml"
+          ),
+        }),
+      }),
+    ]
+  })
     buildStage.onStateChange(
       "IntegrationTestFailed",
       new SnsTopic(this.pipelineNotificationsTopic, {
@@ -148,7 +126,7 @@ export class NewpipelineStack extends cdk.Stack {
           stackName: "NewpipelineStack",
           templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
           adminPermissions: true,
-          runOrder: 1,
+
         }),
       ],
     });
