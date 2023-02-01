@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { SecretValue, Stage } from 'aws-cdk-lib';
 import { Alarm, ComparisonOperator } from 'aws-cdk-lib/aws-cloudwatch';
-import { BuildEnvironmentVariableType, BuildSpec, LinuxBuildImage, PipelineProject } from 'aws-cdk-lib/aws-codebuild';
+import { BuildEnvironmentVariableType, BuildSpec, LinuxBuildImage, PipelineProject, Project } from 'aws-cdk-lib/aws-codebuild';
 import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
@@ -95,7 +95,7 @@ export class NewpipelineStack extends cdk.Stack {
     
         //   }),    
         
-        new CodeBuildAction({
+       new CodeBuildAction({
           actionName: "CDK_Build",
           input: this.cdkSourceOutput,
           outputs: [this.cdkBuildOutput],
@@ -104,14 +104,42 @@ export class NewpipelineStack extends cdk.Stack {
               buildImage: LinuxBuildImage.STANDARD_5_0,
               },
               buildSpec: BuildSpec.fromSourceFilename(
-              "build-specs/cdk-build-spec.yml"
+              "build-specs/cdk-newman-build-spec.yml"
               ),       
           }),
+        
+          
       })
+      
       
       ]
      
     });
+
+    buildStage.onStateChange(
+      "IntegrationTestFailed",
+      new SnsTopic(this.pipelineNotificationsTopic, {
+        message: RuleTargetInput.fromText(
+          `Integration Test Failed. See details here: ${EventField.fromPath(
+            "$.detail.execution-result.external-execution-url"
+          )}`
+        ),
+      }),
+      {
+        ruleName: "IntegrationTestFailed",
+        eventPattern: {
+          detail: {
+            state: ["FAILED"],
+          },
+        },
+        description: "Integration test has failed",
+      }
+    );
+
+
+
+
+
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
       actions: [
