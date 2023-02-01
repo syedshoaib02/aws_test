@@ -12,6 +12,8 @@ import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as actions from 'aws-cdk-lib/aws-codepipeline-actions';
 
 
 export class NewpipelineStack extends cdk.Stack {
@@ -74,27 +76,30 @@ export class NewpipelineStack extends cdk.Stack {
 
     
 
-
-   const buildStage= this.pipeline.addStage({
-    stageName:"build",
-    actions: [
-      new CodeBuildAction({
-
-        actionName: "CDK_Build",
-        input: this.cdkSourceOutput,
-        outputs: [this.cdkBuildOutput],
-        project: new PipelineProject(this, "CdkBuildProject", {
-          environment: {
-            buildImage: LinuxBuildImage.STANDARD_5_0,
-          },
-          buildSpec: BuildSpec.fromSourceFilename(
-            "build-specs/cdk-newman-build-spec.yml"
-          ),
-        }),
-        runOrder: 1,
+    
+    const buildStage= this.pipeline.addStage({
+      stageName:"build",
+      actions: [
+        new CodeBuildAction({
+          
+          actionName: "CDK_Build",
+          input: this.cdkSourceOutput,
+          outputs: [this.cdkBuildOutput],
+          project: new PipelineProject(this, "CdkBuildProject", {
+            environment: {
+              buildImage: LinuxBuildImage.STANDARD_5_0,
+            },
+            buildSpec: BuildSpec.fromSourceFilename(
+              "build-specs/cdk-newman-build-spec.yml"
+              ),
+            }),
+            runOrder: 1,
+          
       }),
     ]
   })
+
+ 
     buildStage.onStateChange(
       "FAILED",
       new SnsTopic(this.pipelineNotificationsTopic, {
@@ -115,6 +120,7 @@ export class NewpipelineStack extends cdk.Stack {
       }
     );
 
+    
 
     
     
@@ -184,7 +190,20 @@ export class NewpipelineStack extends cdk.Stack {
 
 
 
+public addNotification(stage:IStage)
+{
+  stage.addAction(
+    new CloudFormationCreateUpdateStackAction({
+      actionName: "Cdk_Build",
+      stackName: "pipeline",
+      templatePath: this.cdkBuildOutput.atPath(
+        `NewpipelineStack.template.json`
+      ),
+      adminPermissions: true,
+    })
+  );
 
+}
 
 
 
@@ -202,7 +221,7 @@ export class NewpipelineStack extends cdk.Stack {
       stage: IStage,
     
     ) {
-      const integTestAction =  new CodeBuildAction({
+      const buildStag =  new CodeBuildAction({
         actionName: "CDK_Build",
         input: this.cdkSourceOutput,
         outputs: [this.cdkBuildOutput],
@@ -219,8 +238,8 @@ export class NewpipelineStack extends cdk.Stack {
         runOrder: 2,
       });
   
-      stage.addAction(integTestAction);
-      integTestAction.onStateChange(
+      stage.addAction(buildStag);
+      buildStag.onStateChange(
         "IntegrationTestFailed",
         new SnsTopic(this.pipelineNotificationsTopic, {
           message: RuleTargetInput.fromText(
