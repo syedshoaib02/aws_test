@@ -8,6 +8,9 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as actions from "aws-cdk-lib/aws-codepipeline-actions";
 import { Artifact, IStage, Pipeline } from "aws-cdk-lib/aws-codepipeline";
 import { aws_events as events } from 'aws-cdk-lib';
+import * as targets from '@aws-cdk/aws-events-targets';
+
+import * as eventsTargets from '@aws-cdk/aws-events-targets';
 
 import {
   CloudFormationCreateUpdateStackAction,
@@ -20,6 +23,7 @@ import {
   LinuxBuildImage,
   PipelineProject,
 } from "aws-cdk-lib/aws-codebuild";
+import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 
 
 export class NewpipelineStack extends cdk.Stack {
@@ -130,6 +134,7 @@ export class NewpipelineStack extends cdk.Stack {
           'aws.codepipeline',
         ],
       },
+     
  
     });
 
