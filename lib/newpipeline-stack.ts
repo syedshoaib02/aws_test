@@ -20,11 +20,15 @@ import {
   LinuxBuildImage,
   PipelineProject,
 } from "aws-cdk-lib/aws-codebuild";
-// import * as events from "@aws-cdk/aws-events";
+
 
 export class NewpipelineStack extends cdk.Stack {
-
+  private readonly pipeline: Pipeline;
+  private readonly cdkBuildOutput: Artifact;
+  private readonly serviceBuildOutput: Artifact;
+  private readonly serviceSourceOutput: Artifact;
   eventPattern: any;
+  Arn: any;
   private readonly cdkSourceOutput: Artifact;
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -34,8 +38,9 @@ export class NewpipelineStack extends cdk.Stack {
     topic.addSubscription(new subscriptions.EmailSubscription(email));
 
 
+
     const cdkSourceOutput = new Artifact("CDKSourceOutput");
-  
+    this.serviceSourceOutput = new Artifact("serviceSourceOutput");
 
     const pipeline = new codepipeline.Pipeline(this, "Pipeline", {
       stages: [
@@ -110,28 +115,23 @@ export class NewpipelineStack extends cdk.Stack {
 
 
 
-    // const rule = new events.Rule(this,'BuildFailEventRule', {
-    //   description: 'Notify SNS topic on build fail event',
-    //   eventPattern: {
-    //     detail: {
-    //       stage: [
-    //         'Build',
-    //       ],
-    //       state: [
-    //         'FAILED',
-    //       ],
-    //     },
-    //     source: [
-    //       'aws.codepipeline',
-    //     ],
-    //   },
-    //   targets: [
-    //     {
-    //       arn: fn.functionArn,
-    //       id: 'BuildFailHandler',
-    //     },
-    //   ],
-    // });
+    const rule = new events.Rule(this,'BuildFailEventRule', {
+      description: 'Notify SNS topic on build fail event',
+      eventPattern: {
+        detail: {
+          stage: [
+            'Build',
+          ],
+          state: [
+            'FAILED',
+          ],
+        },
+        source: [
+          'aws.codepipeline',
+        ],
+      },
+ 
+    });
 
 
 
