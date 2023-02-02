@@ -1,19 +1,19 @@
 import * as cdk from 'aws-cdk-lib';
 import { SecretValue, Stage } from 'aws-cdk-lib';
-import { Alarm, ComparisonOperator } from 'aws-cdk-lib/aws-cloudwatch';
 import { BuildEnvironmentVariableType, BuildSpec, LinuxBuildImage, PipelineProject, Project } from 'aws-cdk-lib/aws-codebuild';
 import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 import * as sns from '@aws-cdk/aws-sns';
-import { Statistic, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
-import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
+
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
-import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as actions from 'aws-cdk-lib/aws-codepipeline-actions';
+import * as ses from 'aws-cdk-lib/aws-ses';
+
 
 
 export class NewpipelineStack extends cdk.Stack {
@@ -24,15 +24,20 @@ export class NewpipelineStack extends cdk.Stack {
   private readonly serviceSourceOutput: Artifact;
   private readonly cdkSourceOutput: Artifact;
   private readonly pipelineNotificationsTopic: Topic;
+  private readonly buildFailureTopic:Topic;
 
   
-  alarmTopic: Topic;
   
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     
     super(scope, id, props);
+
+
     
-  
+    // const email = new ses.EmailAddress('test@example.com');
+
+    // const topic = new sns.Topic(this, 'PipelineBuildFailNotification');
+    // topic.addSubscription(new subscriptions.EmailSubscription(email));
     
     this.pipelineNotificationsTopic = new Topic(
       this,
@@ -40,10 +45,10 @@ export class NewpipelineStack extends cdk.Stack {
       {
         topicName: "PipelineNotifications",
       }
-      );
-      this.pipelineNotificationsTopic.addSubscription(
-        new EmailSubscription("syeds7933.ss@gmail.com")
-        );
+    );
+    this.pipelineNotificationsTopic.addSubscription(
+      new EmailSubscription("syeds7933.ss@gmail.com")
+    );
         
         this.pipeline = new Pipeline(this, 'Pipeline', {
           pipelineName: "Pipeline",
@@ -51,6 +56,9 @@ export class NewpipelineStack extends cdk.Stack {
       restartExecutionOnUpdate: true,
 
     })
+
+
+
 
     this.cdkSourceOutput = new Artifact("CDKSourceOutput");
     this.serviceSourceOutput = new Artifact("serviceSourceOutput")
@@ -98,6 +106,47 @@ export class NewpipelineStack extends cdk.Stack {
       }),
     ]
   })
+
+
+  const fn = new lambda.Function(this, 'BuildFailHandler', {
+    runtime: lambda.Runtime.NODEJS_14_X,
+    code: lambda.Code.fromInline(`
+      exports.handler = async function(event) {
+        const { detail } = event;
+        const { stage, state } = detail;
+
+        if (stage === 'build' && state === 'FAILED') {
+          const message = \`The build stage failed for pipeline \${pipeline.pipelineName}.\`;
+          await topic.publish({ Message: message });
+        }
+      };
+    `),
+    handler: 'index.handler',
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
 
  
     buildStage.onStateChange(
