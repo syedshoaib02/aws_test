@@ -292,7 +292,7 @@ public addNotification(stage:IStage)
         "IntegrationTestFailed",
         new SnsTopic(this.pipelineNotificationsTopic, {
           message: RuleTargetInput.fromText(
-            `Integration Test Failed. See details here: ${EventField.fromPath(
+            `Integration Test Failed by sureshJi. See details here: ${EventField.fromPath(
               "$.detail.execution-result.external-execution-url"
             )}`
           ),
