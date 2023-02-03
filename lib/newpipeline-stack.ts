@@ -6,13 +6,9 @@ import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildAction
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 import * as sns from '@aws-cdk/aws-sns';
-
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as actions from 'aws-cdk-lib/aws-codepipeline-actions';
-import * as ses from 'aws-cdk-lib/aws-ses';
 
 
 
@@ -31,13 +27,6 @@ export class NewpipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     
     super(scope, id, props);
-
-
-    
-    // const email = new ses.EmailAddress('test@example.com');
-
-    // const topic = new sns.Topic(this, 'PipelineBuildFailNotification');
-    // topic.addSubscription(new subscriptions.EmailSubscription(email));
     
     this.pipelineNotificationsTopic = new Topic(
       this,
@@ -56,10 +45,6 @@ export class NewpipelineStack extends cdk.Stack {
       restartExecutionOnUpdate: true,
 
     })
-
-    //
-
-
 
     this.cdkSourceOutput = new Artifact("CDKSourceOutput");
     this.serviceSourceOutput = new Artifact("serviceSourceOutput")
@@ -83,9 +68,6 @@ export class NewpipelineStack extends cdk.Stack {
     this.cdkBuildOutput = new Artifact("CdkBuildOutput");
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
-    
-
-    
     const buildStage= this.pipeline.addStage({
       stageName:"build",
       actions: [
@@ -108,48 +90,6 @@ export class NewpipelineStack extends cdk.Stack {
     ]
   })
 
-
-  // const fn = new lambda.Function(this, 'BuildFailHandler', {
-  //   runtime: lambda.Runtime.NODEJS_14_X,
-  //   code: lambda.Code.fromInline(`
-  //     exports.handler = async function(event) {
-  //       const { detail } = event;
-  //       const { stage, state } = detail;
-
-  //       if (stage === 'build' && state === 'FAILED') {
-  //         const message = \`The build stage failed for pipeline \${pipeline.pipelineName}.\`;
-  //         await topic.publish({ Message: message });
-  //       }
-  //     };
-  //   `),
-  //   handler: 'index.handler',
-  // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-  
-
- 
     buildStage.onStateChange(
       "FAILED",
       new SnsTopic(this.pipelineNotificationsTopic, {
@@ -169,17 +109,6 @@ export class NewpipelineStack extends cdk.Stack {
         description: "Integration test has failed by syed",
       }
     );
-
-    
-
-    
-    
-    
-    
-
-
-
-
 
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
@@ -222,24 +151,6 @@ export class NewpipelineStack extends cdk.Stack {
     ]
   }
 
-
-
- 
-   
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 public addNotification(stage:IStage)
 {
   stage.addAction(
@@ -254,18 +165,6 @@ public addNotification(stage:IStage)
   );
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
   
     public addServiceTestToStage(
       stage: IStage,
@@ -308,230 +207,7 @@ public addNotification(stage:IStage)
           description: "Integration test has failed",
         }
       );
-    }
-  
-    
-    
-
-  
+    }  
   }
-
-
-
-    
-   
-  
-
-  
-
-
-
-
-
-// import * as cdk from 'aws-cdk-lib';
-// import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
-// import * as ses from 'aws-cdk-lib/aws-ses';
-// import * as sns from 'aws-cdk-lib/aws-sns';
-// import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
-// import * as lambda from 'aws-cdk-lib/aws-lambda';
-// import * as iam from 'aws-cdk-lib/aws-iam';
-// import * as actions from 'aws-cdk-lib/aws-codepipeline-actions';
-// import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/aws-codepipeline';
-// import { CloudFormationCreateUpdateStackAction, CodeBuildAction, GitHubSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
-// import { CfnRule, SecretValue } from 'aws-cdk-lib';
-// import { BuildSpec, LinuxBuildImage, PipelineProject } from 'aws-cdk-lib/aws-codebuild';
-// import * as events from '@aws-cdk/aws-events';
-
-// export class NewpipelineStack extends cdk.Stack {
-
-//   private readonly pipeline: Pipeline;
-//   private readonly cdkBuildOutput: Artifact;
-//   private readonly serviceBuildOutput: Artifact;
-//  private readonly serviceSourceOutput: Artifact;
-//  eventPattern: any;
-//  private readonly cdkSourceOutput: Artifact;
-//  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-//    super(scope, id, props);
-//    const email = 'syeds7933.ss@gmail.com';
-
-//     const topic = new sns.Topic(this, 'PipelineBuildFailNotification');
-//     topic.addSubscription(new subscriptions.EmailSubscription(email));
-
-//     this.pipeline = new Pipeline(this, 'Pipeline', {
-//       pipelineName: "Pipeline",
-//       crossAccountKeys: false,
-//       restartExecutionOnUpdate: true,
-
-//     })
-
-//     const cdkSourceOutput = new Artifact("CDKSourceOutput");
-//     this.serviceSourceOutput = new Artifact("serviceSourceOutput")
-    
-
-//     const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-//       stages: [
-//         {
-//           stageName: 'Source',
-//           actions: [
-//             new GitHubSourceAction({
-//               owner: "syedshoaib02",
-//               repo: "aws_test",
-//               branch: "master",
-//               actionName: "Pipeline_Source",
-//               oauthToken: SecretValue.secretsManager("git_aws"),
-//               output:cdkSourceOutput
-//             }),
-//           ],
-//         },
-
-        
-//         {
-//           stageName: 'Build',
-//           actions: [
-//             new actions.CodeBuildAction({
-//               actionName: 'Build',
-//               input: cdkSourceOutput,
-//               project: new PipelineProject(this, 'BuildProject', {
-//                 buildSpec: BuildSpec.fromSourceFilename(
-//                   "build-specs/cdk-build-spec.yml"
-//                 ),
-//               }),
-//             }),
-//           ],
-//         },
-//       ],
-//     });
-
-  //   this.pipeline.addStage({
-  //     stageName:"Source",
-  //     actions:
-  //     [
-  //      new GitHubSourceAction({
-  //       owner: "syedshoaib02",
-  //       repo: "aws_test",
-  //       branch: "master",
-  //       actionName: "Pipeline_Source",
-  //       oauthToken: SecretValue.secretsManager("git_aws"),
-  //       output:cdkSourceOutput
-        
-
-  //      }),       
-  //     ],
-  //   })
-
-  //   this.cdkBuildOutput = new Artifact("CdkBuildOutput");
-  //   this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
-
-
- 
-  //   this.pipeline.addStage({
-  //     stageName:"build",
-  //     actions: [
-  //       new CodeBuildAction({
-          
-  //         actionName: "CDK_Build",
-  //         input: this.cdkSourceOutput,
-  //         outputs: [this.cdkBuildOutput],
-  //         project: new PipelineProject(this, "CdkBuildProject", {
-  //           environment: {
-  //             buildImage: LinuxBuildImage.STANDARD_5_0,
-  //           },
-  //           buildSpec: BuildSpec.fromSourceFilename(
-  //             "build-specs/cdk-newman-build-spec.yml"
-  //             ),
-  //           }),
-  
-          
-  //     }),
-  //   ]
-  // })
-
-
-  // this.pipeline.addStage({
-  //         stageName: "Pipeline_Update",
-  //         actions: [
-  //           new CloudFormationCreateUpdateStackAction({
-  //             actionName: "Pipeline_Update",
-  //             stackName: "NewpipelineStack",
-  //             templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
-  //             adminPermissions: true,
-    
-  //           }),
-  //         ],
-  //       });
-      
-
-
-
-
-
-
-
-
-
-
-//     const fn = new lambda.Function(this, 'BuildFailHandler', {
-//       runtime: lambda.Runtime.NODEJS_12_X,
-//       code: lambda.Code.fromInline(`
-//         exports.handler = async function(event) {
-//           const { detail } = event;
-//           const { stage, state } = detail;
-
-//           if (stage === 'Build' && state === 'FAILED') {
-//             const message = \`The build stage failed for pipeline \${pipeline.pipelineName}.\`;
-//             await topic.publish({ Message: message });
-//           }
-//         };
-//       `),
-//       handler: 'index.handler',
-//     });
-//     fn.addToRolePolicy(new iam.PolicyStatement({
-//       actions: [
-//         'logs:CreateLogGroup',
-//         'logs:CreateLogStream',
-//         'logs:PutLogEvents',
-//       ],               
-// resources: [
-// topic.topicArn,
-// pipeline.pipelineArn,
-// ],
-// }));
-
-// pipeline.addToRolePolicy(new iam.PolicyStatement({
-//   actions: [
-//     'cloudwatch:DescribeAlarms',
-//     'cloudwatch:GetMetricData',
-//     'cloudwatch:GetMetricStatistics',
-//     'cloudwatch:ListMetrics',
-//   ],
-//   resources: ['*'],
-// }));
-
-// new events.CfnRule(this, 'BuildFailEventRule', {
-//   description: 'Notify SNS topic on build fail event',
-//   eventPattern: {
-//     detail: {
-//       stage: [
-//         'Build',
-//       ],
-//       state: [
-//         'FAILED',
-//       ],
-//     },
-//     source: [
-//       'aws.codepipeline',
-//     ],
-//   },
-//   targets: [
-//     {
-//       arn: fn.functionArn,
-//       id: 'BuildFailHandler',
-//     },
-//   ],
-// });
-// }
-// }
-
-
 
 
