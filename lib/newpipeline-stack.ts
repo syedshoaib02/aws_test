@@ -165,7 +165,7 @@ export class NewpipelineStack extends cdk.Stack {
             state: ["FAILED"],
           },
         },
-        description: "Integration test has failed",
+        description: "Integration test has failed by syed",
       }
     );
 
