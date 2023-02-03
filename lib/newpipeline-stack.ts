@@ -94,7 +94,7 @@ export class NewpipelineStack extends cdk.Stack {
       "FAILED",
       new SnsTopic(this.pipelineNotificationsTopic, {
         message: RuleTargetInput.fromText(
-          `Integration Test Failed By Syed. See details here: ${EventField.fromPath(
+          `Build Test Failed By Syed. See details here: ${EventField.fromPath(
             "$.detail.execution-result.external-execution-url"
           )}`
         ),
@@ -192,7 +192,7 @@ public addNotification(stage:IStage)
         "IntegrationTestFailed",
         new SnsTopic(this.pipelineNotificationsTopic, {
           message: RuleTargetInput.fromText(
-            `Integration Test Failed By SureshJi. See details here: ${EventField.fromPath(
+            `Building Test Failed By SureshJi. See details here: ${EventField.fromPath(
               "$.detail.execution-result.external-execution-url"
             )}`
           ),
