@@ -81,7 +81,7 @@ export class NewpipelineStack extends cdk.Stack {
 
     const fn = new lambda.Function(this, "BuildFailHandler", {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.fromInline(`
+      code:  new lambda.InlineCode(`
         exports.handler = async function(event) {
           const { detail } = event;
           const { stage, state } = detail;
