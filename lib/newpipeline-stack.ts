@@ -89,6 +89,7 @@ export class NewpipelineStack extends cdk.Stack {
       }),
     ]
   })
+  //////
 
     buildStage.onStateChange(
       "FAILED",
