@@ -1,0 +1,21 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install
+      - npm install -g newman
+  build:
+    commands:
+      - npm run build
+      - npm run test
+      - npm run cdk synth
+      - newman run collection_file.json -e environment_file.json
+      - if [ $? -ne 0 ]; then exit 1; fi
+  post_build:
+    commands:
+      - echo "Build process has completed."
+
+artifacts:
+  base-directory: cdk.out
+  files:
+    - '*/'
