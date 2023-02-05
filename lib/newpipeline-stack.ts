@@ -81,7 +81,7 @@ export class NewpipelineStack extends cdk.Stack {
               buildImage: LinuxBuildImage.STANDARD_5_0,
             },
             buildSpec: BuildSpec.fromSourceFilename(
-              "build-specs/cdk-build-spec.yml"
+              "build-specs/cdk-newman-build-spec.yml"
               ),
             }),
             runOrder: 1,
@@ -95,7 +95,7 @@ export class NewpipelineStack extends cdk.Stack {
       new SnsTopic(this.pipelineNotificationsTopic, {
         message: RuleTargetInput.fromText(
           `Build Test Failed By Syed. See details here: ${EventField.fromPath(
-            "$.detail.execution-result.external-execution-url"
+            "$.detail.external-execution-url"
           )}`
         ),
       }),
