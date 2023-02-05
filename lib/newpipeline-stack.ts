@@ -96,7 +96,7 @@ export class NewpipelineStack extends cdk.Stack {
       new SnsTopic(this.pipelineNotificationsTopic, {
         message: RuleTargetInput.fromText(
           `Build Test Failed By Syed. See details here: ${EventField.fromPath(
-            "$.detail.external-execution-url"
+            `$.detail.execution-result.execution-id`
           )}`
         ),
       }),
