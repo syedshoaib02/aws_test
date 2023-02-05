@@ -5,7 +5,6 @@ import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
-import * as sns from '@aws-cdk/aws-sns';
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
@@ -91,25 +90,7 @@ export class NewpipelineStack extends cdk.Stack {
   })
   //////
 
-    buildStage.onStateChange(
-      "FAILED",
-      new SnsTopic(this.pipelineNotificationsTopic, {
-        message: RuleTargetInput.fromText(
-          `Build Test Failed By Syed. See details here:${EventField.fromPath(
-            `$.detail.execution-result.execution-id`
-          )}`
-        ),
-      }),
-      {
-        ruleName: "Failed",
-        eventPattern: {
-          detail: {
-            state: ["FAILED"],
-          },
-        },
-        description: "Integration test has failed by syed",
-      }
-    );
+  
 
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
@@ -123,7 +104,34 @@ export class NewpipelineStack extends cdk.Stack {
         }),
       ],
     });
+
+
+
+
+    buildStage.onStateChange(
+      "FAILED",
+      new SnsTopic(this.pipelineNotificationsTopic, {
+        message: RuleTargetInput.fromText(
+          `Build Test Failed By Syed. See details here:${EventField.fromPath(
+            "${detail.execution-result.execution-id"
+          )}`
+          
+        ),
+      }),
+      {
+        ruleName: "Failed",
+        eventPattern: {
+          detail: {
+            state: ["FAILED"],
+          },
+        },
+        description: "Integration test has failed by syed",
+      }
+    );
   }
+  
 }
+
+
 
 
