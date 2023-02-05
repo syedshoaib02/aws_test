@@ -22,7 +22,7 @@ export class NewpipelineStack extends cdk.Stack {
   private readonly pipelineNotificationsTopic: Topic;
   private readonly buildFailureTopic:Topic;
 
-  
+  /////
   
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     
