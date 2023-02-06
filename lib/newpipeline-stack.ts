@@ -88,6 +88,8 @@ export class NewpipelineStack extends cdk.Stack {
       }),
     ]
   })
+
+
   //////
 
   

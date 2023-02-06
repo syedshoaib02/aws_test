@@ -6,14 +6,13 @@ phases:
       - npm install -g npm
       - npm install
       - npm install -g newman
-      - npm i -g newman-reporter-html
-      - npm install -y jq
+      - npm i newman-reporter-htmlextra
+      - npm install --save-dev newman-reporter-htmlextra
   build:
     commands:
-      - newman run collection_file.json --reporters html --reporter-html-export report.html
+      - npx newman run collection_file.json -r htmlextra -d data.csv
 
 artifacts:
   base-directory: cdk.out
 files:
-- report.html
 - '*/'
