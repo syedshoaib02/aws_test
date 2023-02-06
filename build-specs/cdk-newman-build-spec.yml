@@ -9,7 +9,7 @@ phases:
     commands:
       - npm run build
       - npm run test
-      - newman run collection_file.json -e environment_file.json -d data.csv --reporters html --reporter-html-export report.html
+      - newman run collection_file.json -e environment_file.json -d data.csv
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
@@ -18,5 +18,4 @@ phases:
 artifacts:
   base-directory: cdk.out
 files:
-- report.html
 - '*/'
