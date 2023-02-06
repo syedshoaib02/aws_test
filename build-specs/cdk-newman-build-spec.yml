@@ -4,12 +4,13 @@ phases:
     commands:
       - npm install
       - npm install -g newman
+      - npm i -g newman-reporter-html
   build:
     commands:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - newman run collection_file.json -e environment_file.json
+      - newman runcollection_file.json -e environment_file.json -d data.csv --reporters html --reporter-html-export report.html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
@@ -17,5 +18,6 @@ phases:
 
 artifacts:
   base-directory: cdk.out
-  files:
-    - '*/'
+files:
+- report.html
+- '*/'
