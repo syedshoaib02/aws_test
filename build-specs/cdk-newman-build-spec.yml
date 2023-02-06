@@ -7,10 +7,10 @@ phases:
       - npm i -g newman-reporter-html
   build:
     commands:
-      - npm install -g newman
-      - npm i -g newman-reporter-html
       - npm run build
       - npm run test
+      - npm run cdk synth
+      - newman run collection_file.json
       - newman run collection_file.json -d data.csv --reporters html --reporter-html-export syed.html
   
   post_build:
