@@ -33,6 +33,7 @@
     "@aws-cdk/aws-sns-subscriptions": "^1.188.0",
     "aws-cdk-lib": "2.61.0",
     "constructs": "^10.1.241",
+    "jq": "^1.7.2",
     "node-json2html": "^2.2.2",
     "source-map-support": "^0.5.21"
   }
