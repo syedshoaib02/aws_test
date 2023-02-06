@@ -9,7 +9,7 @@ phases:
       - npm i -g newman-reporter-html
   build:
     commands:
-      - newman run collection_file.json -d data.csv --reporters html --reporter-html-export report.html
+      - newman run collection_file.json --reporters html --reporter-html-export report.html
 
 artifacts:
   base-directory: cdk.out
