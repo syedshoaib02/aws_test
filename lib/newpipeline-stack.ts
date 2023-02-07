@@ -8,6 +8,7 @@ import { Construct } from 'constructs';
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
+import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 
 
 
@@ -107,27 +108,80 @@ export class NewpipelineStack extends cdk.Stack {
       ],
     });
 
+    // s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/
 
 
 
-    buildStage.onStateChange(
-      "FAILED",
-      new SnsTopic(this.pipelineNotificationsTopic, {
-        message: RuleTargetInput.fromText(
-          `Build Test Failed By Syed`
+    // buildStage.onStateChange(
+    //   "FAILED",
+    //   new SnsTopic(this.pipelineNotificationsTopic, {
+    //     message: RuleTargetInput.fromText(
+    //       `Build Test Failed By Syed`
           
-        ),
-      }),
-      {
-        ruleName: "Failed",
-        eventPattern: {
-          detail: {
-            state: ["FAILED"],
-          },
-        },
-        description: "Integration test has failed by syed",
-      }
-    );
+    //     ),
+    //   }),
+    //   {
+    //     ruleName: "Failed",
+    //     eventPattern: {
+    //       detail: {
+    //         state: ["FAILED"],
+    //       },
+    //     },
+    //     description: "Integration test has failed by syed",
+    //   }
+    // );
+    const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
+const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
+const htmlReportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/report8.html';
+
+const bucket = new s3.Bucket(this, 'ReportBucket', {
+  bucketName: bucketName
+});
+
+// const snsTopicSuccess = new SnsTopic(this.pipelineNotificationsTopic, {
+//   message: RuleTargetInput.fromText(
+//     `Build Test Successful.`
+//   ),
+// });
+
+buildStage.onStateChange(
+  "FAILED",
+  new SnsTopic(this.pipelineNotificationsTopic, {
+    message: RuleTargetInput.fromText(
+      `Build Test Failed By Syed. Check the report in S3 bucket: ${bucketName}. Report file (text): ${reportKey}. Report file (HTML): https://s3.amazonaws.com/${bucketName}/${htmlReportKey}`
+    ),
+  }),
+  {
+    ruleName: "Failed",
+    eventPattern: {
+      detail: {
+        state: ["FAILED"],
+      },
+    },
+    description: "Integration test has failed by syed",
+  }
+);
+
+
+
+buildStage.onStateChange("SUCCEEDED", 
+new SnsTopic(this.pipelineNotificationsTopic, {
+  message: RuleTargetInput.fromText(
+    `Build Test Passed By Syed. Check the report in S3 bucket: ${bucketName}. Report file (text): ${reportKey}. Report file (HTML): https://s3.amazonaws.com/${bucketName}/${htmlReportKey}`
+  ),
+}),
+{
+  ruleName: "Success",
+  eventPattern: {
+    detail: {
+      state: ["SUCCEEDED"],
+    },
+  },
+  description: "Integration test has Passed by syed",
+}
+);
+
+
   }
   
 }
