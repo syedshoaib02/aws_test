@@ -17,6 +17,7 @@ phases:
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
+      - aws s3 cp report8.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/report8.html
       - echo "Build process has completed."
 
 artifacts:
