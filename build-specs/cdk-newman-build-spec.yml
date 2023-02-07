@@ -7,12 +7,22 @@ phases:
       - npm install
       - npm install -g newman
       - npm i newman-reporter-htmlextra
-      - npm install --save-dev newman-reporter-htmlextra
+      
   build:
     commands:
-      - npx newman run collection_file.json
+      - npm run build
+      - npm run test
+      - npm run cdk -- synth
+      - npx newman run collection_file.json -r htmlextra -d data.csv
 
 artifacts:
   base-directory: cdk.out
   files:
     - '**/*'
+
+reports:
+  jest_reports:
+    files:
+      - 'test-report.xml'
+    file-format: JUNITXML
+    base-directory: 'test-reports'
