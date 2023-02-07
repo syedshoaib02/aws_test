@@ -1,0 +1,677 @@
+{
+	"info": {
+		"_postman_id": "7a2ebfe4-7014-4957-9a7f-c714fca03b2f",
+		"name": "9. Walk in PPG - csv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16734827"
+	},
+	"item": [
+		{
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Validating Successful Login\", function () {",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.response.to.have.status(200);",
+							"        pm.expect(jsonData).to.be.an(\"object\");",
+							"        pm.expect(jsonData).to.have.property(\"token\");",
+							"        pm.collectionVariables.set(\"token\", jsonData.token);",
+							"        pm.collectionVariables.set(\"continuetest\", true);  ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const login_name = pm.collectionVariables.get(\"login_name\",\"\");\r",
+							"const login_password = pm.collectionVariables.get(\"login_password\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"loginName\":\"{{login_name}}\",\"password\":\"{{login_password}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/user/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change location",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done');\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"    outlet = pm.iterationData.get(\"location_id\");\r",
+							"   pm.collectionVariables.set(\"location_id\",outlet);\r",
+							"   \r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Validating Location Change\", function () {\r",
+							"    if (jsonData.code == 417 )\r",
+							"    {\r",
+							"        pm.collectionVariables.set(\"continuetest\", false);\r",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);\r",
+							"    }else\r",
+							"    {\r",
+							"        pm.response.to.have.status(200);\r",
+							"        pm.expect(jsonData).to.be.an(\"object\");\r",
+							"        pm.expect(jsonData).to.have.property(\"token\");\r",
+							"        pm.collectionVariables.set(\"token_new\", jsonData.token);\r",
+							"        pm.collectionVariables.set(\"continuetest\", true);  \r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"locationId\": \"{{location_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/user/change/location",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"user",
+						"change",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Walkins",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json();",
+							"",
+							"pm.test(\"Walkin Partners API\", function () {",
+							"    if (response.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Walkins API failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        // if (response.count > 0)",
+							"        // {",
+							"                // var selectRandomWalkingToken = Match.floor(Math.random() * 3);",
+							"                // console.log(\"Selected Walkin Index\" + selectRandomWalkingToken);",
+							"                ",
+							"                clientID = pm.iterationData.get(\"client_id\");",
+							"                console.log(clientID);",
+							"                pm.collectionVariables.set(\"clientID\",clientID);",
+							"        // }",
+							"        pm.response.to.have.status(200);",
+							"        pm.collectionVariables.set(\"continuetest\", true); ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done');\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/fe/v1/admission/walkins?locationId={{location_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"admission",
+						"walkins"
+					],
+					"query": [
+						{
+							"key": "locationId",
+							"value": "{{location_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Walkin Tokens",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonresponse = pm.response.json();",
+							"pm.test(\"Walkin Tokens API\", function () {",
+							"    if (jsonresponse.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Walkins Tokens API failed because -> \" + jsonresponse.message);",
+							"    }else",
+							"    {",
+							"        if (jsonresponse.length > 0)",
+							"        {",
+							"                pm.collectionVariables.set(\"tokenID\", JSON.stringify(jsonresponse[0].tokenID)); ",
+							"                console.log(JSON.stringify(jsonresponse[0].tokenID));",
+							"",
+							"        }",
+							"        pm.response.to.have.status(200);",
+							"        pm.collectionVariables.set(\"continuetest\", true); ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done');\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/fe/v1/admission/walkinTokens?clientId={{clientID}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"admission",
+						"walkinTokens"
+					],
+					"query": [
+						{
+							"key": "clientId",
+							"value": "{{clientID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Validating VerifyToken API\", function () ",
+							"{   ",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"VerifyToken API failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.response.to.have.status(200);",
+							"        pm.expect(jsonData).to.be.an(\"array\");",
+							"        //pm.expect(jsonData[0].tokenInfo);",
+							"",
+							"        // \"walkincoupon\"",
+							"        pm.collectionVariables.set(\"walkincoupon\", jsonData[0].tokenInfo.tokenCode);",
+							"        console.log(jsonData[0].tokenInfo.tokenCode);",
+							"",
+							"        // \"entitlementID\"",
+							"        pm.collectionVariables.set(\"entitlementID\", jsonData[0].aiServices[0].serviceID);",
+							"        pm.collectionVariables.set(\"guestentitlement\", JSON.stringify(jsonData[0]));",
+							"        console.log(jsonData[0].aiServices[0].serviceID);",
+							"        pm.collectionVariables.set(\"continuetest\", true); ",
+							"",
+							"        }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done.');\r",
+							"}\r",
+							"\r",
+							"else{\r",
+							"   pm.collectionVariables.set(\"token_code\",pm.iterationData.get(\"token_code\"));\r",
+							"   \r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tokenType\": {{token_type}},\n  \"tokenCode\": \"{{token_code}}\",\n  \"clientID\": \"{{clientID}}\",\n  \"tokenID\": {{tokenID}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/admission/verifytoken",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"admission",
+						"verifytoken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SaveBoardingPass",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)",
+							"{",
+							"    throw new Error('Stopping Execution ! No further tests will be done');",
+							"}",
+							"",
+							"var pnrnumber = Math.floor(100000 + Math.random() * 900000);",
+							"console.log(pnrnumber);",
+							"var seatnum = Math.floor(100 + Math.random() * 900);",
+							"console.log(seatnum);",
+							"",
+							"var body = JSON.parse(pm.request.body.raw);",
+							"body.pnr = pnrnumber;",
+							"body.seatNumber = seatnum;",
+							"pm.request.body.raw = JSON.stringify(body);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"Validating Boarding Pass Save\", function () {",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.response.to.have.status(200);",
+							"        pm.collectionVariables.set(\"boardingpassid\", jsonData.id );",
+							"        pm.collectionVariables.set(\"continuetest\", true);  ",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.864.41",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"isManual\": false,\r\n    \"scanResult\": null,\r\n    \"createTime\": \"2021-11-25T03:20:50.274Z\",\r\n    \"name\": \"HARNOOR/DEE\",\r\n    \"pnr\": \"5DICDA\",\r\n    \"fromCity\": \"HKG\",\r\n    \"toCity\": \"ICN\",\r\n    \"airlineCode\": \"KE\",\r\n    \"flightNumber\": \"0608\",\r\n    \"classCode\": \"C\",\r\n    \"dateOfFlight\": \"2021/02/21\",\r\n    \"seatNumber\": \"008J\",\r\n    \"checkInNumber\": \"0001\",\r\n    \"paxStatus\": \"3\",\r\n    \"frequentFlyerNumber\": \"5009265353\",\r\n    \"formatCode\": \"M\",\r\n    \"electronicTicketIndicator\": \"E\",\r\n    \"numberOfLegsEncoded\": \"1\",\r\n    \"fieldSizeOfVariableSizeField\": \"4D\",\r\n    \"beginningOfVersionNumber\": \">\",\r\n    \"versionNumber\": \"5\",\r\n    \"fieldSizeOfFollowingStructuredMessage\": \"18\",\r\n    \"passengerDescription\": \"0\",\r\n    \"sourceOfCheckIn\": \" \",\r\n    \"sourceOfBoardingPassIssuance\": \"O\",\r\n    \"dateOfIssueOfBoardingPass\": \"2021/02/20\",\r\n    \"documentType\": \"B\",\r\n    \"airlineDesignatorOfBoardingPassIssuer\": \"KE\",\r\n    \"baggageTagLicencePlateNumber\": \"\",\r\n    \"nonConsecutiveBaggageTagLicensce1st\": null,\r\n    \"nonConsecutiveBaggageTagLicensce2nd\": null,\r\n    \"fieldSizeOfFollowingStructuredMessageRepeated\": \"2A\",\r\n    \"airlineNumericCode\": \"180\",\r\n    \"documentFormOrSerialNumber\": \"2331620582\",\r\n    \"selecteeIndicator\": \"0\",\r\n    \"internationalDocumentationVerification\": \"\",\r\n    \"marketingCarrierDesignator\": \"KE\",\r\n    \"frequentFlyerAirlineDesignator\": \"AF\",\r\n    \"idOrADIndicator\": \" \",\r\n    \"fastTrack\": null,\r\n    \"freeBaggageAllowAnce\": \"   \"\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/boardingPass/save",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"boardingPass",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Create Order API\", function () ",
+							"{   ",
+							"    if (jsonData.code == 417 )",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", false);",
+							"        pm.expect.fail(\"Create Order API failed because -> \" + jsonData.message);",
+							"    }else",
+							"    {",
+							"        pm.collectionVariables.set(\"continuetest\", true);",
+							"        pm.expect(jsonData).to.be.an(\"object\");",
+							"        pm.collectionVariables.set(\"receiptNumber\", jsonData.receiptNumber);",
+							"        pm.response.to.have.status(200);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get(\"continuetest\") == false)\r",
+							"{\r",
+							"    throw new Error('Stoping Execution ! No further tests will be done');\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_new}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aiResult\": {{guestentitlement}},\n\t\"boardingPassInfos\": [\n\t\t{\n\t\t\t\"boardingPassRecordID\": \"{{boardingpassid}}\",\n\t\t\t\"airlineCode\": \"AA\",\n\t\t\t\"flightNumber\": \"123\",\n\t\t\t\"toCity\": \"BOM\",\n\t\t\t\"fromCity\": \"DEL\",\n\t\t\t\"isPrimary\": true\n\t\t}\n\t],\n\t\"memberInfo\": {\n\t\t\"membershipID\": null,\n\t\t\"membershipEmail\": null,\n\t\t\"membershipPhoneNumber\": null,\n\t\t\"salutation\": null,\n\t\t\"membershipFirstName\": null,\n\t\t\"membershipLastName\": null,\n\t\t\"membershipBirthdate\": null,\n\t\t\"membershipStatus\": null,\n\t\t\"memberAlerts\": [],\n\t\t\"responseCode\": null,\n\t\t\"correlationId\": null,\n\t\t\"serviceResponseCode\": null\n\t},\n\t\"paymentInfo\": {\n\t\t\"totalAmount\": 0,\n\t\t\"givenChange\": 0,\n\t\t\"serviceCharge\": 0,\n\t\t\"totalLinetax\": 0,\n\t\t\"totalOrdertax\": 0,\n\t\t\"exclusiveDetailTaxAmount\": 0,\n\t\t\"taxAmount\": 0,\n\t\t\"orderAmount\": 0,\n\t\t\"taxName\": null,\n\t\t\"taxRate\": null,\n\t\t\"taxName2\": null,\n\t\t\"taxRate2\": null,\n\t\t\"isTaxIncluded2\": null,\n\t\t\"isTaxIncluded\": null,\n\t\t\"openPid\": null\n\t},\n\t\"userId\": \"6303216c6c3220837c178db4\",\n\t\"Products\": [],\n\t\"currencyCode\": \"MYR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/fe/v1/retail/createOrder",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"fe",
+						"v1",
+						"retail",
+						"createOrder"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer-token",
+			"value": "no value\n",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "walkincoupon",
+			"value": ""
+		},
+		{
+			"key": "entitlementID",
+			"value": ""
+		},
+		{
+			"key": "clientID",
+			"value": ""
+		},
+		{
+			"key": "tokenID",
+			"value": ""
+		},
+		{
+			"key": "guestentitlement",
+			"value": ""
+		},
+		{
+			"key": "boardingpassid",
+			"value": ""
+		},
+		{
+			"key": "host",
+			"value": "https://dev-us-lms-backendapi.plaza-network.com",
+			"type": "string"
+		},
+		{
+			"key": "login_name",
+			"value": "Sneha",
+			"type": "string"
+		},
+		{
+			"key": "login_password",
+			"value": "csIT@8990",
+			"type": "string"
+		},
+		{
+			"key": "location_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "continuetest",
+			"value": ""
+		},
+		{
+			"key": "token_new",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_type",
+			"value": "8",
+			"type": "string"
+		},
+		{
+			"key": "token_code",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "receiptNumber",
+			"value": ""
+		}
+	]
+}

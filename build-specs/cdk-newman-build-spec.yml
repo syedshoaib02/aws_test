@@ -1,19 +1,23 @@
 version: 0.2
-
 phases:
   install:
     commands:
-      - npm install -g npm
       - npm install
       - npm install -g newman
-      - npm i newman-reporter-htmlextra
-      
+      - npm install -g newman-reporter-html 
   build:
     commands:
+      - npm install
+      - npm install -g newman
+      - npm install -g newman-reporter-html
       - npm run build
       - npm run test
-      - npm run cdk -- synth
-      - npx newman run collection_file.json -r htmlextra -d data.csv
+      - npm run cdk synth
+      - newman run walkin.json -d wi.csv
+      - if [ $? -ne 0 ]; then exit 1; fi
+  post_build:
+    commands:
+      - echo "Build process has completed."
 
 artifacts:
   base-directory: cdk.out
