@@ -10,7 +10,7 @@ phases:
       - npm install --save-dev newman-reporter-htmlextra
   build:
     commands:
-      - npx newman run collection_file.json -r htmlextra
+      - npx newman run collection_file.json
 
 artifacts:
   base-directory: cdk.out
