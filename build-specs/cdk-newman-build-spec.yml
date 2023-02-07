@@ -13,7 +13,7 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - newman run walkin.json -d wi.csv
+      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export report8.html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
