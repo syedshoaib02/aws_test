@@ -134,10 +134,7 @@ export class NewpipelineStack extends cdk.Stack {
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
 const htmlReportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/report8.html';
 
-const bucket = new s3.Bucket(this, 'ReportBucket', {
-  bucketName: bucketName
-});
-
+// 
 // const snsTopicSuccess = new SnsTopic(this.pipelineNotificationsTopic, {
 //   message: RuleTargetInput.fromText(
 //     `Build Test Successful.`
@@ -164,7 +161,8 @@ buildStage.onStateChange(
 
 
 
-buildStage.onStateChange("SUCCEEDED", 
+buildStage.onStateChange(
+  "SUCCEEDED", 
 new SnsTopic(this.pipelineNotificationsTopic, {
   message: RuleTargetInput.fromText(
     `Build Test Passed By Syed. Check the report in S3 bucket: ${bucketName}. Report file (text): ${reportKey}. Report file (HTML): https://s3.amazonaws.com/${bucketName}/${htmlReportKey}`
