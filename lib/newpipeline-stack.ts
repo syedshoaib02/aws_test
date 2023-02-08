@@ -132,25 +132,25 @@ export class NewpipelineStack extends cdk.Stack {
     //     description: "Integration test has failed by syed",
     //   }
     // );
-    // const DATE = new Date().toLocaleDateString("en-US", {
-    //   day: "2-digit",
-    //   month: "2-digit",
-    //   year: "numeric",
-    // });
-    // // const TIME = new Date().toLocaleTimeString("en-US", {
-    // //   hour: "2-digit",
-    // //   minute: "2-digit",
-    // // });
+    const DATE = new Date().toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const TIME = new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     // const execSync = require("child_process").execSync;
     // const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
     // console.log("Git commit ID:", COMMIT_ID);
-    // const REPORT_NAME = `ppl-Report-${COMMIT_ID}-${DATE}.html`;
-    // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
+    const REPORT_NAME = `ppl-Report-${DATE}-${TIME}.html`;
+    const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/${ENCODED_REPORT_NAME}`;
 
     
 
