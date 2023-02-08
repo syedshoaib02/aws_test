@@ -113,6 +113,7 @@ export class NewpipelineStack extends cdk.Stack {
 
 
     // buildStage.onStateChange(
+
     //   "FAILED",
     //   new SnsTopic(this.pipelineNotificationsTopic, {
     //     message: RuleTargetInput.fromText(
@@ -130,10 +131,22 @@ export class NewpipelineStack extends cdk.Stack {
     //     description: "Integration test has failed by syed",
     //   }
     // );
+    const DATE = new Date().toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const TIME = new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const execSync = require("child_process").execSync;
+    const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
+    const REPORT_NAME = `ppl-Report-${DATE}-${TIME}-${COMMIT_ID}.html`;
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/$REPORT_NAME`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/${REPORT_NAME}`;
 
     
 
