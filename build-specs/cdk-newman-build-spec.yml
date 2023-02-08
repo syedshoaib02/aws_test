@@ -17,8 +17,9 @@ phases:
       - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - export DATE=$(date +%d-%m-%Y)
       - export TIME=$(date +%H-%M)
-      - export COMMIT_ID=$(git rev-parse origin/master)
-      - export REPORT_NAME=PPL-Report-$DATE-$TIME-$COMMIT_ID.html
+      - export COMMIT_ID=$(git rev-parse HEAD)
+      - echo "The commit ID is $COMMIT_ID"
+      - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export $REPORT_NAME
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
