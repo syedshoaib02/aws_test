@@ -22,7 +22,7 @@ phases:
   post_build:
     commands:
       
-      - aws s3 cp $REPORT_NAME s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/$REPORT_NAME --acl public-read || { echo "Error copying report to S3"; exit 1; }
+      - aws s3 cp $REPORT_NAME s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/$REPORT_NAME
       - echo "Build process has completed."
 
 artifacts:
