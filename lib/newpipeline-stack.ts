@@ -9,6 +9,7 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
+import { execSync } from "child_process"
 
 
 
@@ -141,8 +142,9 @@ export class NewpipelineStack extends cdk.Stack {
     //   minute: "2-digit",
     // });
     const execSync = require("child_process").execSync;
-    // const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
-    const REPORT_NAME = `ppl-Report-${DATE}.html`;
+    const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
+    console.log("Git commit ID:", COMMIT_ID);
+    const REPORT_NAME = `ppl-Report-${COMMIT_ID}-${DATE}.html`;
     const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
     
     
