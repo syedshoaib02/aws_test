@@ -14,7 +14,7 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - git init
+      - node gitcheck.js
       - git remote add origin https://github.com/syedshoaib02/aws_test.git
       - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - export DATE=$(date +%d-%m-%Y)
