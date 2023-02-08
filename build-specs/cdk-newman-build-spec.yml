@@ -21,8 +21,8 @@ phases:
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
-      - aws s3 cp $REPORT_NAME s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/$REPORT_NAME
-      - aws s3api put-bucket-acl --bucket newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2 --acl public-read
+      - aws s3 cp $REPORT_NAME s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/$REPORT_NAME --acl public-read
+    
 
       - echo "Build process has completed."
 

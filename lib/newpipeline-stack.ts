@@ -141,8 +141,8 @@ export class NewpipelineStack extends cdk.Stack {
     //   minute: "2-digit",
     // });
     const execSync = require("child_process").execSync;
-    const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
-    const REPORT_NAME = `ppl-Report-${DATE}-${COMMIT_ID}.html`;
+    // const COMMIT_ID = execSync("git rev-parse --short HEAD").toString().trim();
+    const REPORT_NAME = `ppl-Report-${DATE}.html`;
     const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
     
     
