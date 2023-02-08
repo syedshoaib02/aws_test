@@ -1,4 +1,8 @@
 version: 0.2
+env:
+  variables:
+    COMMIT_ID: "`node -e 'const { execSync } = require(\"child_process\"); try { console.log(execSync(\"git log --format=\\\"%H\\\" -n 1\").toString().trim()); } catch (error) { console.error(error); }'`"
+
 phases:
   install:
     commands:
@@ -14,12 +18,9 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - node gitcheck.js
-      - git remote add origin https://github.com/syedshoaib02/aws_test.git
       - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - export DATE=$(date +%d-%m-%Y)
       - export TIME=$(date +%H-%M)
-      - export COMMIT_ID=$(git log --format="%H" -n 1)
       - echo "The commit ID is $COMMIT_ID"
       - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report.html
