@@ -13,11 +13,15 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export report8.html
+      - export DATE=$(date +%Y-%m-%d)
+      - export TIME=$(date +%H-%M-%S)
+      - export COMMIT_ID=$(git rev-parse HEAD)
+      - export REPORT_NAME=ppl-Report-$DATE-$TIME-$COMMIT_ID.html
+      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export $REPORT_NAME
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
-      - aws s3 cp report8.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/report8.html
+      - aws s3 cp $REPORT_NAME s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/$REPORT_NAME
       - echo "Build process has completed."
 
 artifacts:
