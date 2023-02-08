@@ -149,7 +149,7 @@ export class NewpipelineStack extends cdk.Stack {
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/${ENCODED_REPORT_NAME}`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report.html`;
 
     
 
