@@ -14,7 +14,7 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - export GIT_COMMIT= $(Build.SourceVersion)
+      - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - export DATE=$(date +%d-%m-%Y)
       - export TIME=$(date +%H-%M)
       - export COMMIT_ID=$(git rev-parse origin/master)
