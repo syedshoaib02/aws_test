@@ -5,6 +5,7 @@ phases:
       - npm install
       - npm install -g newman
       - npm install -g newman-reporter-html 
+       
   build:
     commands:
       - npm install
@@ -13,10 +14,11 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
+      - export GIT_COMMIT= $(Build.SourceVersion)
       - export DATE=$(date +%d-%m-%Y)
-      # - export TIME=$(date +%H-%M-%S)
-      - if [ -d .git ]; then export COMMIT_ID=$(git rev-parse HEAD); fi
-      - export REPORT_NAME=PPL-Report-$DATE-$COMMIT_ID.html
+      - export TIME=$(date +%H-%M)
+      - export COMMIT_ID=$(git rev-parse HEAD)
+      - export REPORT_NAME=PPL-Report-$DATE-$TIME-$COMMIT_ID.html
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export $REPORT_NAME
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
