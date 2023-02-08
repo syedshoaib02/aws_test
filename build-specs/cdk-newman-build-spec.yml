@@ -15,7 +15,7 @@ phases:
       - npm run cdk synth
       - export DATE=$(date +%d-%m-%Y)
       # - export TIME=$(date +%H-%M-%S)
-      - export COMMIT_ID=$(git rev-parse --short HEAD)
+      - export COMMIT_ID=$(git rev-parse HEAD)
       - export REPORT_NAME=PPL-Report-$DATE-$COMMIT_ID.html
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export $REPORT_NAME
       - if [ $? -ne 0 ]; then exit 1; fi
