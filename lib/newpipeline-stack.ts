@@ -22,10 +22,6 @@ export class NewpipelineStack extends cdk.Stack {
   private readonly serviceSourceOutput: Artifact;
   private readonly cdkSourceOutput: Artifact;
   private readonly pipelineNotificationsTopic: Topic;
-  private readonly buildFailureTopic:Topic;
-
-  /////
-  
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     
     super(scope, id, props);
@@ -81,6 +77,7 @@ export class NewpipelineStack extends cdk.Stack {
           project: new PipelineProject(this, "CdkBuildProject", {
             environment: {
               buildImage: LinuxBuildImage.STANDARD_5_0,
+
             },
             buildSpec: BuildSpec.fromSourceFilename(
               "build-specs/cdk-newman-build-spec.yml"
@@ -92,11 +89,6 @@ export class NewpipelineStack extends cdk.Stack {
     ]
   })
 
-
-  //////
-
-
-  
 
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
@@ -145,9 +137,11 @@ export class NewpipelineStack extends cdk.Stack {
     // });
 
     // const COMMIT_ID=process.env.COMMIT_ID
-    // const REPORT_NAME = `ppl-Report-${DATE}-${COMMIT_ID}html`;
+    // const REPORT_NAME = `ppl-Report-{COMMIT_ID}html`;
     // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
-    
+    const COMMIT_ID=process.env.COMMIT_ID
+
+    console.log(COMMIT_ID)
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';

@@ -1,4 +1,6 @@
 version: 0.2
+variables:
+    COMMIT_ID: ${COMMIT_ID}
 phases:
   install:
     commands:
@@ -21,10 +23,10 @@ phases:
       # - export DATE=$(date +%d-%m-%Y)
       # - export TIME=$(date +%H-%M)
       # - export COMMIT_ID=$(git rev-parse HEAD)
-      # - echo "The commit ID is $COMMIT_ID"
-      # - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
-      - export COMMIT_ID=$(git rev-parse HEAD)
       - echo "The commit ID is $COMMIT_ID"
+      # - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
+      - export COMMIT_ID1=$(git rev-parse HEAD)
+      - echo "The commit ID is $COMMIT_ID1"
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report.html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
