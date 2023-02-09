@@ -9,6 +9,10 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
+// const {IMAGE_TAG} = require('../build-specs/cdk-newman-build-spec.yml')
+
+
+
 // import { execSync } from "child_process"
 
 
@@ -147,15 +151,17 @@ export class NewpipelineStack extends cdk.Stack {
       // const commitId = execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`).toString().trim();
       // console.log('Commit ID:', commitId);
     
-      const commitId = `$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)`;
-    
-      
-      
+      // const commitId =  execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`)
+      let commitId = execSync('git log --format="%h" -n 1').toString().trim();
+      //  console.log('Commit ID:', commitId.substring(0, 7));
+
+     const latest =commitId.substring(0, 7)
+     console.log(latest)
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${commitId}.html`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${latest}.html`;
 
 
 
