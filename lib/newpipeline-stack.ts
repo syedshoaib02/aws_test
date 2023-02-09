@@ -9,7 +9,9 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
-import { execSync } from "child_process"
+// import { execSync } from "child_process"
+
+const { execSync }  = require('child_process');
 
 
 
@@ -17,7 +19,7 @@ import { execSync } from "child_process"
 
 
 export class NewpipelineStack extends cdk.Stack {
-
+  
   private readonly pipeline: Pipeline;
   private readonly cdkBuildOutput: Artifact;
   private readonly serviceBuildOutput: Artifact;
@@ -34,16 +36,16 @@ export class NewpipelineStack extends cdk.Stack {
       {
         topicName: "PipelineNotifications",
       }
-    );
-    this.pipelineNotificationsTopic.addSubscription(
-      new EmailSubscription("syeds7933.ss@gmail.com")
-    );
+      );
+      this.pipelineNotificationsTopic.addSubscription(
+        new EmailSubscription("syeds7933.ss@gmail.com")
+        );
         
         this.pipeline = new Pipeline(this, 'Pipeline', {
           pipelineName: "Pipeline",
-      crossAccountKeys: false,
-      restartExecutionOnUpdate: true,
-
+          crossAccountKeys: false,
+          restartExecutionOnUpdate: true,
+          
     })
 
     this.cdkSourceOutput = new Artifact("CDKSourceOutput");
@@ -142,7 +144,7 @@ export class NewpipelineStack extends cdk.Stack {
     // const REPORT_NAME = `ppl-Report-{COMMIT_ID}html`;
     // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
    
-      const commitId = execSync('git log --format="%H" -n 1').toString().trim();
+      const commitId = execSync('git log --format="%H" -n 1');
       console.log('Commit ID:', commitId);
     
     
