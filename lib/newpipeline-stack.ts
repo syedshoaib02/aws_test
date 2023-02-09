@@ -14,6 +14,7 @@ import { exec } from 'node:child_process';
 import { execSync } from 'child_process';
 
 
+
 export class NewpipelineStack extends cdk.Stack {
   
   private readonly pipeline: Pipeline;
