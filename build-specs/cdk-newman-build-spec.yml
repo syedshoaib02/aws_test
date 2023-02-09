@@ -14,7 +14,8 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - export COMMIT_ID= $(node -e "console.log(require('./temp').toString().trim())"
+      - export COMMIT_ID=$(node -e "console.log(require('./gitcheck.js').toString().trim())")
+
       - export COMMIT_ID1= ${{ env.COMMIT_ID }}
       - export GITHUB_ID= ${{rocess.env.COMMIT_ID}}
       - echo "Building the code with commit id= ${COMMIT_ID}"
