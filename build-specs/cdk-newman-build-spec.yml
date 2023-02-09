@@ -14,6 +14,8 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "commit will be $(IMAGE_TAG)" 
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report-$(date +"%d-%m-%Y").html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
