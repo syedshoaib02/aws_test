@@ -19,7 +19,7 @@ phases:
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:     
-      - aws s3 cp PPL_Report.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report.html
+      - aws s3 cp PPL_Report- $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report- $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7.html
       - echo "Build process has completed."
 
 artifacts:

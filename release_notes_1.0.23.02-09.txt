@@ -1,0 +1,197 @@
+* commit 41ae9ad672f003d51bf21e261a9658133fb02092
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 20:15:35 2023 +0530
+| 
+|     msg
+| 
+* commit 91d4ca3f898ac625885f16a9ed113a530c516f2b
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 20:10:00 2023 +0530
+| 
+|     msg
+| 
+* commit af5255c04560126c6f367a8cb62000b3cd97074c
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 20:04:59 2023 +0530
+| 
+|     msg
+| 
+* commit d2ab8b19cd37d85635526e51751ba6f648fa5cac
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 20:00:03 2023 +0530
+| 
+|     msg
+| 
+* commit 170c71e80f96871a51d53fc74b8049e5fdb35941
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 19:38:36 2023 +0530
+| 
+|     added
+| 
+* commit 6eaffc832fea0c1b4bbe130f755810ca9034b1d7
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 19:27:42 2023 +0530
+| 
+|     msg added
+| 
+* commit 45dbd524203294892792c264731737c67b0fa5b8
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 19:11:31 2023 +0530
+| 
+|     msg added
+| 
+* commit 632ec23570e64d0442c5cbf00fc0adb596cca0ad
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 18:40:08 2023 +0530
+| 
+|     msg added
+| 
+* commit c12ef6e9d43e19e098b020506c18926ddb74c56a
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 18:26:51 2023 +0530
+| 
+|     changes
+| 
+* commit 31220ffd4e72b21d705188e83c4028c80666981b
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 17:58:31 2023 +0530
+| 
+|     sureshji
+| 
+* commit 8017b0e3e2e2efa1ac67cd686f4f53f8832b65ba
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 16:09:07 2023 +0530
+| 
+|     added
+| 
+* commit a80e5db00aa1645900dbf6049b29f5df281b0e0b
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 15:47:52 2023 +0530
+| 
+|     added
+| 
+* commit 784ab75d84d38a516fc2aab29e242a72a02d4ac3
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 11:23:30 2023 +0530
+| 
+|     id changes
+| 
+* commit b97a683ad0a634cc29665a82c58c71b051714bfc
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 11:17:47 2023 +0530
+| 
+|     id changes
+| 
+* commit 115f1f6f7a139a32699951fe3ce3d87e9d71481f
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 11:00:19 2023 +0530
+| 
+|     id changes
+| 
+* commit b77391d6648ec812129aedc0fa5ff9228541caad
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 10:51:06 2023 +0530
+| 
+|     id changes
+| 
+* commit b3360461e384ce1dd136704ce04245f62fa9dbb1
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 10:40:09 2023 +0530
+| 
+|     id changes
+| 
+* commit eba9804540cc289269b48779ad1ed5bccf79e6cb
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 10:28:18 2023 +0530
+| 
+|     id changes
+| 
+* commit 9419e0fac6787a64a7c9bd06c4093928c20c8719
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 09:58:44 2023 +0530
+| 
+|     id changes
+| 
+* commit 68db6da4efe3abef10c199f0a6d8018e00bdf4b6
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 09:47:28 2023 +0530
+| 
+|     id change
+| 
+* commit b9dc1ffe30aeb05e913ca0b4125e5fbbc9f55271
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 01:20:42 2023 +0530
+| 
+|     adding git
+| 
+* commit 625509bc08722ccc7275af9e25ec3f825aeb3266
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 01:11:19 2023 +0530
+| 
+|     adding git
+| 
+* commit 317c54fa6c65a47db8cd9bc391e16e4d49b2fc92
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 01:00:35 2023 +0530
+| 
+|     adding git
+| 
+* commit e34d109c4ffd32baba404abeb731ac2355ca6246
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 00:53:21 2023 +0530
+| 
+|     added2
+| 
+* commit 45c76fe90480f43c3d0c3d5b4ec8d2ef964e2a85
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 00:41:13 2023 +0530
+| 
+|     added2
+| 
+* commit 0f902087210f4c286f2ac94d444513ef146a5060
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 00:20:17 2023 +0530
+| 
+|     added2
+| 
+* commit 9d170a4ea6a17d24e85266837b355c0c64bb45e3
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Thu Feb 9 00:09:03 2023 +0530
+| 
+|     added2
+| 
+* commit 1cc865b19372d99c8ae7b6bc43d09a3a9468687e
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Wed Feb 8 23:46:41 2023 +0530
+| 
+|     added2
+| 
+* commit adc795b51d4adf4eb9831490c569cebe28e78f96
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Wed Feb 8 23:12:49 2023 +0530
+| 
+|     added1
+| 
+* commit 74d81b710ec5aab603e23cf5aba9da9627e33bd1
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Wed Feb 8 21:48:37 2023 +0530
+| 
+|     added
+| 
+* commit b3d0e7ca0ab9cabcc350098bd92015635a0ddd1c
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Wed Feb 8 21:02:57 2023 +0530
+| 
+|     last
+| 
+* commit 8c5112dbc15e560d36bf1905f62f884bf444c169
+| Author: Syed Shoaib <syed.shoaib@trangile.com>
+| Date:   Wed Feb 8 20:52:08 2023 +0530
+| 
+|     last
+| 
+* commit 05c642852f9f9980667a7bf0898d2bb19c946b7d
+  Author: Syed Shoaib <syed.shoaib@trangile.com>
+  Date:   Wed Feb 8 20:32:29 2023 +0530
+  
+      test
