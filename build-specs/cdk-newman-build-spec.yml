@@ -15,7 +15,7 @@ phases:
       - npm install -g newman
       - npm install -g newman-reporter-html
       - npm run build
-      # - npm run test
+      - npm run test
       - npm run cdk synth
       - echo "commit will be $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
       - export IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
