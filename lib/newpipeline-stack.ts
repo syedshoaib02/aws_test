@@ -14,6 +14,8 @@ import { execSync } from "child_process"
 
 
 
+
+
 export class NewpipelineStack extends cdk.Stack {
 
   private readonly pipeline: Pipeline;
@@ -139,13 +141,14 @@ export class NewpipelineStack extends cdk.Stack {
     // const COMMIT_ID=process.env.COMMIT_ID
     // const REPORT_NAME = `ppl-Report-{COMMIT_ID}html`;
     // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
-    const COMMIT_ID=process.env.COMMIT_ID
+    const commitId = execSync('git log --format="%H" -n 1').toString().trim();
+    console.log(`Commit ID: ${commitId}`);
 
-    console.log(COMMIT_ID)
+    
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report.html`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${commitId}.html`;
 
 
 
