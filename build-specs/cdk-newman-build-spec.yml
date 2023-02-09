@@ -11,6 +11,7 @@ phases:
       - npm install
       - npm install -g newman
       - npm install -g newman-reporter-html
+      - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - npm run build
       - npm run test
       - npm run cdk synth
