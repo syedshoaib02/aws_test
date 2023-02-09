@@ -13,6 +13,7 @@ import { execSync } from "child_process"
 
 
 
+
 export class NewpipelineStack extends cdk.Stack {
 
   private readonly pipeline: Pipeline;
@@ -93,6 +94,7 @@ export class NewpipelineStack extends cdk.Stack {
 
 
   //////
+
 
   
 

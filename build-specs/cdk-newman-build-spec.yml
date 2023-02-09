@@ -1,8 +1,8 @@
 version: 0.2
 env:
   variables:
-    COMMIT_ID: "`node -e 'const { execSync } = require(\"child_process\"); try { console.log(execSync(\"git log --format=\\\"%H\\\" -n 1\").toString().trim()); } catch (error) { console.error(error); }'`"
-
+    COMMIT_ID: ${{ env.COMMIT_ID }}
+    GITHUB_ID: ${{rocess.env.COMMIT_ID}}
 phases:
   install:
     commands:
@@ -18,13 +18,16 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
-      - export DATE=$(date +%d-%m-%Y)
-      - export TIME=$(date +%H-%M)
-      - echo "The commit ID is $COMMIT_ID"
-      - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
+      - echo "Commit ID= $COMMIT_ID"
+      - echo "GIT ID= $GITHUB_ID"
+      # - git init
+      # - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+      # - export DATE=$(date +%d-%m-%Y)
+      # - export TIME=$(date +%H-%M)
+      # - export COMMIT_ID=$(git rev-parse HEAD)
+      # - echo "The commit ID is $COMMIT_ID"
+      # - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report.html
-
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:
