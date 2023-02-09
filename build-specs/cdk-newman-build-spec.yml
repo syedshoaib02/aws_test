@@ -1,9 +1,7 @@
 version: 0.2
 env:
   variables:
-    COMMIT_ID: $(node -e "console.log(require('./temp').toString().trim())"
-    COMMIT_ID1: ${{ env.COMMIT_ID }}
-    GITHUB_ID: ${{rocess.env.COMMIT_ID}}
+
 phases:
   install:
     commands:
@@ -19,9 +17,12 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - echo "Building the code with commit id= $COMMIT_ID"
-      - echo "Commit ID= $COMMIT_ID1"
-      - echo "GIT ID= $GITHUB_ID"
+      - export COMMIT_ID= $(node -e "console.log(require('./temp').toString().trim())"
+      - export COMMIT_ID1= ${{ env.COMMIT_ID }}
+      - export GITHUB_ID= ${{rocess.env.COMMIT_ID}}
+      - echo "Building the code with commit id= ${COMMIT_ID}"
+      - echo "Commit ID= ${COMMIT_ID1}"
+      - echo "GIT ID= $(GITHUB_ID)"
       # - git init
       # - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       # - export DATE=$(date +%d-%m-%Y)
@@ -32,8 +33,7 @@ phases:
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report.html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
-    commands:
-      
+    commands:     
       - aws s3 cp PPL_Report.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report.html
       - echo "Build process has completed."
 
