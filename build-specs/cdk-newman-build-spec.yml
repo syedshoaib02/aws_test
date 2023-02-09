@@ -1,4 +1,7 @@
 version: 0.2
+env:
+  variables:
+    COMMIT_ID: $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION)
 phases:
   install:
     commands:

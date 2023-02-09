@@ -10,17 +10,8 @@ import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 import { exec } from 'node:child_process';
-// const {IMAGE_TAG} = require('../build-specs/cdk-newman-build-spec.yml')
 
-
-
-// import { execSync } from "child_process"
-
-
-
-const execSync = require('child_process').execSync;
-
-
+import { execSync } from 'child_process';
 
 
 export class NewpipelineStack extends cdk.Stack {
@@ -112,69 +103,20 @@ export class NewpipelineStack extends cdk.Stack {
       ],
     });
 
-    // s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/
-
-
-
-    // buildStage.onStateChange(
-
-    //   "FAILED",
-    //   new SnsTopic(this.pipelineNotificationsTopic, {
-    //     message: RuleTargetInput.fromText(
-    //       `Build Test Failed By Syed`
-          
-    //     ),
-    //   }),
-    //   {
-    //     ruleName: "Failed",
-    //     eventPattern: {
-    //       detail: {
-    //         state: ["FAILED"],
-    //       },
-    //     },
-    //     description: "Integration test has failed by syed",
-    //   }
-    // );
-    // const DATE = new Date().toLocaleDateString("en-US", {
-    //   day: "2-digit",
-    //   month: "2-digit",
-    //   year: "numeric",
-    // });
-    // const TIME = new Date().toLocaleTimeString("en-US", {
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    // });
-
-    // const COMMIT_ID=process.env.COMMIT_ID
-    // const REPORT_NAME = `ppl-Report-{COMMIT_ID}html`;
-    // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
-   
-      // const commitId = execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`).toString().trim();
-      // console.log('Commit ID:', commitId);
     
-      // const commitId =  execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`)
       let commitId = execSync('git rev-parse HEAD', {encoding: 'utf8'}).toString().trim();
       //  console.log('Commit ID:', commitId.substring(0, 7));
 
      const latest =commitId.substring(0, 7)
      console.log(latest)
-     process.env.IMAGE_TAG
+    //  process.env.IMAGE_TAG
+    //  console.log(process.env.IMAGE_TAG)
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
 const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${latest}.html`;
 
-
-
-    
-
-// /////
-// const snsTopicSuccess = new SnsTopic(this.pipelineNotificationsTopic, {
-//   message: RuleTargetInput.fromText(
-//     `Build Test Successful.`
-//   ),
-// });
 
 buildStage.onStateChange(
   "FAILED",
