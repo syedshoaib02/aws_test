@@ -11,9 +11,9 @@ import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 // import { execSync } from "child_process"
 
+
+
 const { execSync }  = require('child_process');
-
-
 
 
 
@@ -144,20 +144,18 @@ export class NewpipelineStack extends cdk.Stack {
     // const REPORT_NAME = `ppl-Report-{COMMIT_ID}html`;
     // const ENCODED_REPORT_NAME = encodeURIComponent(REPORT_NAME);
    
-      // const commitId = execSync('git log --format="%H" -n 1');
+      // const commitId = execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`).toString().trim();
       // console.log('Commit ID:', commitId);
     
-      let resolvedSourceVersion: string | undefined;
-
-      if (process.env.CODEBUILD_RESOLVED_SOURCE_VERSION) {
-          resolvedSourceVersion = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION.slice(0, 7);
-      }
-   
+      const commitId = `$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)`;
+    
+      
+      
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${resolvedSourceVersion}.html`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${commitId}.html`;
 
 
 
