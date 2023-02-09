@@ -152,7 +152,7 @@ export class NewpipelineStack extends cdk.Stack {
       // console.log('Commit ID:', commitId);
     
       // const commitId =  execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`)
-      let commitId = execSync('git log --format="%h" -n 1').toString().trim();
+      let commitId = execSync('git rev-parse --short HEAD').toString().trim();
       //  console.log('Commit ID:', commitId.substring(0, 7));
 
      const latest =commitId.substring(0, 7)
