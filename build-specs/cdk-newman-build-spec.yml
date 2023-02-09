@@ -1,7 +1,8 @@
 version: 0.2
 env:
   variables:
-    COMMIT_ID: ${{ env.COMMIT_ID }}
+    COMMIT_ID: $(node -e "console.log(require('./temp').toString().trim())"
+    COMMIT_ID1: ${{ env.COMMIT_ID }}
     GITHUB_ID: ${{rocess.env.COMMIT_ID}}
 phases:
   install:
@@ -18,7 +19,8 @@ phases:
       - npm run build
       - npm run test
       - npm run cdk synth
-      - echo "Commit ID= $COMMIT_ID"
+      - echo "Building the code with commit id= $COMMIT_ID"
+      - echo "Commit ID= $COMMIT_ID1"
       - echo "GIT ID= $GITHUB_ID"
       # - git init
       # - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
