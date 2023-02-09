@@ -9,6 +9,7 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
+import { exec } from 'node:child_process';
 // const {IMAGE_TAG} = require('../build-specs/cdk-newman-build-spec.yml')
 
 
@@ -17,7 +18,7 @@ import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 
 
 
-const { execSync }  = require('child_process');
+import { execSync } from 'child_process';
 
 
 
@@ -152,11 +153,12 @@ export class NewpipelineStack extends cdk.Stack {
       // console.log('Commit ID:', commitId);
     
       // const commitId =  execSync(`echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7`)
-      let commitId = execSync('git rev-parse --short HEAD').toString().trim();
+      let commitId = execSync('git rev-parse HEAD', {encoding: 'utf8'}).toString().trim();
       //  console.log('Commit ID:', commitId.substring(0, 7));
 
      const latest =commitId.substring(0, 7)
      console.log(latest)
+     process.env.IMAGE_TAG
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
