@@ -21,7 +21,7 @@ phases:
       # - export COMMIT_ID=$(git rev-parse HEAD)
       # - echo "The commit ID is $COMMIT_ID"
       # - export REPORT_NAME=PPL-Report-${DATE}-${COMMIT_ID}.html
-      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report.html
+      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report_$(git rev-parse HEAD).html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:     
