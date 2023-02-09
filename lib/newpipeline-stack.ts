@@ -104,8 +104,8 @@ export class NewpipelineStack extends cdk.Stack {
       ],
     });
 
-    
-      let commitId = execSync('git rev-parse HEAD', {encoding: 'utf8'}).toString().trim();
+    const cmd = 'git rev-parse HEAD';
+      let commitId = execSync(cmd, {encoding: 'utf8'}).toString().trim();
       //  console.log('Commit ID:', commitId.substring(0, 7));
 
      const latest =commitId.substring(0, 7)
