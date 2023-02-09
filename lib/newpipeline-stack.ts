@@ -147,11 +147,17 @@ export class NewpipelineStack extends cdk.Stack {
       // const commitId = execSync('git log --format="%H" -n 1');
       // console.log('Commit ID:', commitId);
     
+      let resolvedSourceVersion: string | undefined;
+
+      if (process.env.CODEBUILD_RESOLVED_SOURCE_VERSION) {
+          resolvedSourceVersion = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION.slice(0, 7);
+      }
+   
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report.html`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${resolvedSourceVersion}.html`;
 
 
 
