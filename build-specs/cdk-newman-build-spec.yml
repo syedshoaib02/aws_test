@@ -15,11 +15,12 @@ phases:
       - npm run test
       - npm run cdk synth
       - echo "commit will be $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
-      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report- $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7.html
+      - IMAGE_TAG=$($CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report-$IMAGE_TAG.html
       - if [ $? -ne 0 ]; then exit 1; fi
   post_build:
     commands:     
-      - aws s3 cp PPL_Report- $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report- $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7.html
+      - aws s3 cp PPL_Report-$IMAGE_TAG.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report-$IMAGE_TAG.html
       - echo "Build process has completed."
 
 artifacts:
