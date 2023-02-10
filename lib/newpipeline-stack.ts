@@ -9,9 +9,11 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
-import { exec } from 'node:child_process';
+// import { exec } from 'node:child_process';
 
-import { execSync } from 'child_process';
+// import { execSync } from 'child_process';
+
+import { spawnSync } from 'child_process';
 
 
 
@@ -104,19 +106,32 @@ export class NewpipelineStack extends cdk.Stack {
       ],
     });
 
-    const cmd = 'git rev-parse HEAD';
-      let commitId = execSync(cmd, {encoding: 'utf8'}).toString().trim();
-      //  console.log('Commit ID:', commitId.substring(0, 7));
+    // const cmd = 'git rev-parse HEAD';
+    //   let commitId = execSync(cmd, {encoding: 'utf8'}).toString().trim();
+    //   //  console.log('Commit ID:', commitId.substring(0, 7));
 
-     const latest =commitId.substring(0, 7)
-     console.log(latest)
+    //  const latest =commitId.substring(0, 7)
+    //  console.log(latest)
     //  process.env.IMAGE_TAG
     //  console.log(process.env.IMAGE_TAG)
+
+ 
+
+const result = spawnSync('git', ['rev-parse', 'HEAD']);
+
+if (result.error) {
+  console.error(`error: ${result.error}`);
+  process.exit(1);
+}
+
+const revision = result.stdout.toString().trim().substr(0, 7);
+// console.log(`git revision (7 characters): ${revision}`);
+
     
     
     const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${latest}.html`;
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
 
 
 buildStage.onStateChange(
