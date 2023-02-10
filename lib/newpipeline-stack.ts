@@ -13,6 +13,7 @@ import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 
 // import { execSync } from 'child_process';
 
+
 import { spawnSync } from 'child_process';
 
 
@@ -178,7 +179,4 @@ new SnsTopic(this.pipelineNotificationsTopic, {
   }
   
 }
-
-
-
 ///////
