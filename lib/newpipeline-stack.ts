@@ -10,6 +10,7 @@ import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
 import { spawnSync } from 'child_process';
+import { Console } from 'console';
 
 
 
@@ -72,6 +73,8 @@ if (result.error) {
   process.exit(1);
 }
 const revision = result.stdout.toString().trim().substr(0, 7);
+
+console.log(revision)
  
 
 
@@ -102,28 +105,8 @@ const revision = result.stdout.toString().trim().substr(0, 7);
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
 const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
 
-
-    this.pipeline.addStage({
-      stageName: "Pipeline_Update",
-      actions: [
-        new CloudFormationCreateUpdateStackAction({
-          actionName: "Pipeline_Update",
-          stackName: "NewpipelineStack",
-          templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
-          adminPermissions: true,
-
-        }),
-      ],
-    });
-
-
-
-
-
-    
-   
-
-
+console.log(htmlReportKey)
+  
 buildStage.onStateChange(
   "FAILED",
   new SnsTopic(this.pipelineNotificationsTopic, {
@@ -163,6 +146,21 @@ new SnsTopic(this.pipelineNotificationsTopic, {
   description: "Integration test has Passed by syed",
 }
 );
+
+this.pipeline.addStage({
+  stageName: "Pipeline_Update",
+  actions: [
+    new CloudFormationCreateUpdateStackAction({
+      actionName: "Pipeline_Update",
+      stackName: "NewpipelineStack",
+      templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
+      adminPermissions: true,
+
+    }),
+  ],
+});
+
+
 
 
   }
