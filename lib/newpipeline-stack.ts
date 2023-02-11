@@ -96,6 +96,11 @@ export class NewpipelineStack extends cdk.Stack {
   const revision = result.stdout.toString().trim().substr(0, 7);
   
   console.log(revision)
+
+  
+const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
+const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
   
 
   const buildStage = this.pipeline.addStage({
@@ -130,9 +135,6 @@ export class NewpipelineStack extends cdk.Stack {
 
 
 
-const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
-const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
 
 buildStage.onStateChange(
   "FAILED",
