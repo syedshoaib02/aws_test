@@ -7,12 +7,11 @@ phases:
     commands:
       - npm install
       - npm install -g newman
-      - npm install -g newman-reporter-html 
-       
+      - npm install -g newman-reporter-html      
   build:
-  env:
+    env:
       IMAGE_TAG: "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
-  commands:
+    commands:
       - npm install
       - npm install -g newman
       - npm install -g newman-reporter-html

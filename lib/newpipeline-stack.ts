@@ -63,7 +63,8 @@ export class NewpipelineStack extends cdk.Stack {
     })
     this.cdkBuildOutput = new Artifact("CdkBuildOutput");
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
-
+  
+    
   //   const buildStage= this.pipeline.addStage({
   //     stageName:"build",
   //     actions: [
@@ -86,46 +87,48 @@ export class NewpipelineStack extends cdk.Stack {
   //     }),
   //   ]
   // })
+
   const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
+  if (result.error) {
+    console.error(`error: ${result.error}`);
+    process.exit(1);
+  }
+  const revision = result.stdout.toString().trim().substr(0, 7);
+  
+  console.log(revision)
+  
 
-if (result.error) {
-  console.error(`error: ${result.error}`);
-  process.exit(1);
-}
-const revision = result.stdout.toString().trim().substr(0, 7);
-
-console.log(revision)
-
-this.cdkBuildOutput = new Artifact("cdkBuildOutput");
-
-const buildStage = this.pipeline.addStage({
-      stageName:"build",
-      actions: [
-        new CodeBuildAction({
-          
-          actionName: "CDK_Build",
-          input: this.cdkSourceOutput,
-          outputs: [this.cdkBuildOutput],
-          environmentVariables: {
-            'REVISION': {
-              value: revision,
-              type: BuildEnvironmentVariableType.PLAINTEXT
+  const buildStage = this.pipeline.addStage({
+    stageName:"build",
+    actions: [
+      new CodeBuildAction({
+        
+            actionName: "CDK_Build",
+            input: this.cdkSourceOutput,
+            outputs: [this.cdkBuildOutput],
+            environmentVariables: {
+              'REVISION': {
+                value: revision,
+                type: BuildEnvironmentVariableType.PLAINTEXT
+              },
             },
-          },
-          project: new PipelineProject(this, "CdkBuildProject", {
-            environment: {
-              buildImage: LinuxBuildImage.STANDARD_5_0,
-
-            },
-            buildSpec: BuildSpec.fromSourceFilename(
-              "build-specs/cdk-newman-build-spec.yml"
-              ),
+            project: new PipelineProject(this, "CdkBuildProject", {
+              environment: {
+                buildImage: LinuxBuildImage.STANDARD_5_0,
+  
+              },
+              buildSpec: BuildSpec.fromSourceFilename(
+                "build-specs/cdk-newman-build-spec.yml"
+                ),
+              }),
+              runOrder: 1,
+              
             }),
-            runOrder: 1,
-          
-      }),
-    ]
-  });
+      ]
+    });
+
+
+
 
 const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
