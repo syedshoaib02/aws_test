@@ -1,7 +1,4 @@
 version: 0.2
-env:
-variables:
-    CODEBUILD_RESOLVED_SOURCE_VERSION: $CODEBUILD_WEBHOOK_TRIGGER
 phases:
   install:
     commands:
