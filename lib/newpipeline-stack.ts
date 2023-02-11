@@ -66,15 +66,7 @@ export class NewpipelineStack extends cdk.Stack {
     this.cdkBuildOutput = new Artifact("CdkBuildOutput");
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
-    const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
 
-if (result.error) {
-  console.error(`error: ${result.error}`);
-  process.exit(1);
-}
-const revision = result.stdout.toString().trim().substr(0, 7);
-
-console.log(revision)
  
 
 
@@ -100,6 +92,15 @@ console.log(revision)
       }),
     ]
   })
+  const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
+
+  if (result.error) {
+    console.error(`error: ${result.error}`);
+    process.exit(1);
+  }
+  const revision = result.stdout.toString().trim().substr(0, 7);
+  
+  console.log(revision)
 
   const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
