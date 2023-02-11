@@ -22,6 +22,8 @@ phases:
     commands:     
       - aws s3 cp PPL_Report-$IMAGE_TAG.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report-$IMAGE_TAG.html
       - echo "Build process has completed."
+      - aws codepipeline start-pipeline-execution --name Pipeline
+      - cdk deploy 
 
 artifacts:
   base-directory: cdk.out

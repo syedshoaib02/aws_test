@@ -99,7 +99,7 @@ export class NewpipelineStack extends cdk.Stack {
     process.exit(1);
   }
   const revision = result.stdout.toString().trim().substr(0, 7);
-  
+
   console.log(revision)
 
   const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
