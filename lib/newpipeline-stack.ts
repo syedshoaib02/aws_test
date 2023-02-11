@@ -60,7 +60,7 @@ export class NewpipelineStack extends cdk.Stack {
         repo: "aws_test",
         branch: "master",
         actionName: "Pipeline_Source",
-        oauthToken: SecretValue.secretsManager("git_aws"),
+        oauthToken: SecretValue.secretsManager("git-latest"),
         output:this.cdkSourceOutput
         
 
@@ -118,13 +118,12 @@ export class NewpipelineStack extends cdk.Stack {
 
  
 
-const result = spawnSync('git', ['rev-parse', 'HEAD']);
+const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
 
 if (result.error) {
   console.error(`error: ${result.error}`);
   process.exit(1);
 }
-
 const revision = result.stdout.toString().trim().substr(0, 7);
 // console.log(`git revision (7 characters): ${revision}`);
 
@@ -179,4 +178,3 @@ new SnsTopic(this.pipelineNotificationsTopic, {
   }
   
 }
-///////
