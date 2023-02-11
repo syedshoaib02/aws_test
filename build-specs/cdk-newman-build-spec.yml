@@ -1,4 +1,7 @@
 version: 0.2
+env:
+  variables:
+    IMAGE_TAG: $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 phases:
   install:
     commands:
@@ -7,8 +10,13 @@ phases:
       - npm install -g newman-reporter-html 
        
   build:
-    commands:
+  env:
+      IMAGE_TAG: "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
+  commands:
       - npm install
+      - npm install -g newman
+      - npm install -g newman-reporter-html
+      - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - npm run build
       - npm run test
       - npm run cdk synth
@@ -16,9 +24,11 @@ phases:
       - export IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - newman run walkin.json -d wi.csv --reporters html --reporter-html-export PPL_Report-$IMAGE_TAG.html
       - if [ $? -ne 0 ]; then exit 1; fi
+      
+  post_build:
+    commands:     
       - aws s3 cp PPL_Report-$IMAGE_TAG.html s3://newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports/PPL_Report-$IMAGE_TAG.html
       - echo "Build process has completed."
-      
 
 artifacts:
   base-directory: cdk.out

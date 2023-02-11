@@ -8,12 +8,6 @@ import { Construct } from 'constructs';
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
-import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
-// import { exec } from 'node:child_process';
-
-// import { execSync } from 'child_process';
-
-
 import { spawnSync } from 'child_process';
 
 
@@ -70,7 +64,41 @@ export class NewpipelineStack extends cdk.Stack {
     this.cdkBuildOutput = new Artifact("CdkBuildOutput");
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
-    const buildStage= this.pipeline.addStage({
+  //   const buildStage= this.pipeline.addStage({
+  //     stageName:"build",
+  //     actions: [
+  //       new CodeBuildAction({
+          
+  //         actionName: "CDK_Build",
+  //         input: this.cdkSourceOutput,
+  //         outputs: [this.cdkBuildOutput],
+  //         project: new PipelineProject(this, "CdkBuildProject", {
+  //           environment: {
+  //             buildImage: LinuxBuildImage.STANDARD_5_0,
+
+  //           },
+  //           buildSpec: BuildSpec.fromSourceFilename(
+  //             "build-specs/cdk-newman-build-spec.yml"
+  //             ),
+  //           }),
+  //           runOrder: 1,
+          
+  //     }),
+  //   ]
+  // })
+  const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
+
+if (result.error) {
+  console.error(`error: ${result.error}`);
+  process.exit(1);
+}
+const revision = result.stdout.toString().trim().substr(0, 7);
+
+console.log(revision)
+
+this.cdkBuildOutput = new Artifact("cdkBuildOutput");
+
+const buildStage = this.pipeline.addStage({
       stageName:"build",
       actions: [
         new CodeBuildAction({
@@ -78,6 +106,12 @@ export class NewpipelineStack extends cdk.Stack {
           actionName: "CDK_Build",
           input: this.cdkSourceOutput,
           outputs: [this.cdkBuildOutput],
+          environmentVariables: {
+            'REVISION': {
+              value: revision,
+              type: BuildEnvironmentVariableType.PLAINTEXT
+            },
+          },
           project: new PipelineProject(this, "CdkBuildProject", {
             environment: {
               buildImage: LinuxBuildImage.STANDARD_5_0,
@@ -91,48 +125,11 @@ export class NewpipelineStack extends cdk.Stack {
           
       }),
     ]
-  })
+  });
 
-
-    this.pipeline.addStage({
-      stageName: "Pipeline_Update",
-      actions: [
-        new CloudFormationCreateUpdateStackAction({
-          actionName: "Pipeline_Update",
-          stackName: "NewpipelineStack",
-          templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
-          adminPermissions: true,
-
-        }),
-      ],
-    });
-
-    // const cmd = 'git rev-parse HEAD';
-    //   let commitId = execSync(cmd, {encoding: 'utf8'}).toString().trim();
-    //   //  console.log('Commit ID:', commitId.substring(0, 7));
-
-    //  const latest =commitId.substring(0, 7)
-    //  console.log(latest)
-    //  process.env.IMAGE_TAG
-    //  console.log(process.env.IMAGE_TAG)
-
- 
-
-const result = spawnSync('git', ['log', '--format=%H', '-n', '1']);
-
-if (result.error) {
-  console.error(`error: ${result.error}`);
-  process.exit(1);
-}
-const revision = result.stdout.toString().trim().substr(0, 7);
-// console.log(`git revision (7 characters): ${revision}`);
-
-    
-    
-    const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
+const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
 const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
-
 
 buildStage.onStateChange(
   "FAILED",
@@ -174,6 +171,19 @@ new SnsTopic(this.pipelineNotificationsTopic, {
 }
 );
 
+
+    this.pipeline.addStage({
+      stageName: "Pipeline_Update",
+      actions: [
+        new CloudFormationCreateUpdateStackAction({
+          actionName: "Pipeline_Update",
+          stackName: "NewpipelineStack",
+          templatePath: this.cdkBuildOutput.atPath("NewpipelineStack.template.json"),
+          adminPermissions: true,
+
+        }),
+      ],
+    });
 
   }
   
