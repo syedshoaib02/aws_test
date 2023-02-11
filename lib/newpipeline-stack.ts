@@ -101,6 +101,8 @@ export class NewpipelineStack extends cdk.Stack {
 const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
 const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
 const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
+
+console.log(htmlReportKey)
   
 
   const buildStage = this.pipeline.addStage({
@@ -111,12 +113,6 @@ const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq
             actionName: "CDK_Build",
             input: this.cdkSourceOutput,
             outputs: [this.cdkBuildOutput],
-            environmentVariables: {
-              'REVISION': {
-                value: revision,
-                type: BuildEnvironmentVariableType.PLAINTEXT
-              },
-            },
             project: new PipelineProject(this, "CdkBuildProject", {
               environment: {
                 buildImage: LinuxBuildImage.STANDARD_5_0,
@@ -194,5 +190,4 @@ new SnsTopic(this.pipelineNotificationsTopic, {
   
 }
 
-
-//////
+/////
