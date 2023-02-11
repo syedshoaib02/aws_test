@@ -1,7 +1,4 @@
 version: 0.2
-env:
-  variables:
-    IMAGE_TAG: $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 phases:
   install:
     commands:
@@ -9,13 +6,10 @@ phases:
       - npm install -g newman
       - npm install -g newman-reporter-html      
   build:
-    env:
-      IMAGE_TAG: "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
     commands:
       - npm install
       - npm install -g newman
       - npm install -g newman-reporter-html
-      - export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - npm run build
       - npm run test
       - npm run cdk synth

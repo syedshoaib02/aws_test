@@ -9,11 +9,6 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
 import { EventField, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Stack, App, aws_s3 as s3 } from 'aws-cdk-lib';
-// import { exec } from 'node:child_process';
-
-// import { execSync } from 'child_process';
-
-
 import { spawnSync } from 'child_process';
 
 
@@ -78,9 +73,7 @@ if (result.error) {
 }
 const revision = result.stdout.toString().trim().substr(0, 7);
  
-const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
-const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
-const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
+
 
     const buildStage= this.pipeline.addStage({
       stageName:"build",
@@ -104,6 +97,10 @@ const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq
       }),
     ]
   })
+
+  const bucketName = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2';
+const reportKey = 'newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2/reports';
+const htmlReportKey = `newpipelinestack-pipelineartifactsbucket22248f97-dttshkqq1xz2.s3.ap-south-1.amazonaws.com/reports/PPL_Report-${revision}.html`;
 
 
     this.pipeline.addStage({
@@ -172,5 +169,3 @@ new SnsTopic(this.pipelineNotificationsTopic, {
   
 }
 
-
-//////////
